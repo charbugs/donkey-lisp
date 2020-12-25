@@ -1,0 +1,12 @@
+#!/bin/bash
+
+mkdir -p bin
+
+gcc -Wall -Wextra -o bin/lisp \
+    src/lisp.c \
+    src/list.c \
+    src/tokenize.c \
+    src/parse.c \
+    src/buildins.c \
+    src/exec.c
+
