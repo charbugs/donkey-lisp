@@ -12,10 +12,7 @@
 
 typedef struct Token {
     int type;
-    union {
-        int int_val;
-        char* str_val;
-    };
+    char* val;
 } Token;
 
 

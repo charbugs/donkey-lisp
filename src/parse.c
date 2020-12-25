@@ -3,36 +3,12 @@
 #include "parse.h"
 
 
-Root *new_root(char *label) {
-    Root *root = malloc(sizeof(Root));
-    root->node.type = NODE_ROOT;
-    root->node.children = list_create();
-    root->label = label;
-    return root;
-}
-
-Appl *new_appl(char *func) {
-    Appl *appl = malloc(sizeof(Appl));
-    appl->node.type = NODE_APPL;
-    appl->node.children = list_create();
-    appl->func = func;
-    return appl;
-}
-
-Str *new_str(char *val) {
-    Str *str = malloc(sizeof(Str));
-    str->node.type = NODE_STR;
-    str->node.children = list_create();
-    str->val = val;
-    return str;
-}
-
-Int *new_int(int val) {
-    Int *_int = malloc(sizeof(Int));
-    _int->node.type = NODE_INT;
-    _int->node.children = list_create();
-    _int->val = val;
-    return _int;
+Node *new_node(int type, char *val) {
+    Node *node = malloc(sizeof(Node));
+    node->children = list_create();
+    node->type = type;
+    node->val = val;
+    return node;
 }
 
 static int is_wrapped_by_brackets(List *tokens) {
@@ -98,13 +74,13 @@ static void check_token_syntax(List *tokens) {
 }
 
 // List<Token> *tokens
-Root *parse(List *tokens) {
+Node *parse(List *tokens) {
     
     check_token_syntax(tokens);
 
     // List<Node> *stack
     List *stack = list_create(); 
-    Node *cur = (Node*)new_root("root");
+    Node *cur = new_node(T_ROOT, "root");
 
     for (int i = 0; i < tokens->length; i++) {
 
@@ -113,44 +89,32 @@ Root *parse(List *tokens) {
         if (token->type == TOK_OPN) {
             // Get the function name token that follows the opening token.
             Token *tok_fun = list_get(tokens, ++i);
-            Appl *appl = new_appl(tok_fun->str_val);
+            Node *appl = new_node(T_APPL, tok_fun->val);
             list_push(cur->children, appl);
             list_push(stack, cur);
-            cur = (Node*)appl;
+            cur = appl;
         }
         else if (token->type == TOK_CLS) {
             cur = list_pop(stack);
 
         } 
         else if (token->type == TOK_STR) {
-            list_push(cur->children, new_str(token->str_val));
+            list_push(cur->children, new_node(T_STR, token->val));
         }
         else if (token->type == TOK_INT) {
-            list_push(cur->children, new_int(token->int_val));
+            list_push(cur->children, new_node(T_INT, token->val));
         }
     }
 
-    return (Root*)cur;
+    return cur;
 }
 
 static void _print_ast(Node* node, int level) {
-
     for (int i = 0; i < level; i++) {
         printf("   ");
     }
 
-    if (node->type == NODE_ROOT) {
-        printf("Root: %s\n", ((Root*)node)->label);
-    }
-    else if (node->type == NODE_APPL) {
-        printf("Appl: %s\n", ((Appl*)node)->func);
-    }
-    else if (node->type == NODE_STR) {
-        printf("Str: %s\n", ((Str*)node)->val);
-    }
-    else if (node->type == NODE_INT) {
-        printf("Int: %d\n", ((Int*)node)->val);
-    }
+    printf("%s: %s\n", type_to_string(node->type), node->val);
    
     for (int i = 0; i < node->children->length; i++) {
         Node *child = list_get(node->children, i);
@@ -162,7 +126,7 @@ void print_ast(Node *node) {
  _print_ast(node, 0);   
 }
 
-char* node_type_to_string(int type) {
+char* type_to_string(int type) {
     switch(type) {
         case 0: return "Root";
         case 1: return "Appl";

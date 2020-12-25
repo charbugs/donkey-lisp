@@ -24,7 +24,7 @@ List *tokenize(char* text) {
         if (*text == '(') {
             token = malloc(sizeof(Token));
             token->type = TOK_OPN;
-            token->str_val = "(";
+            token->val = "(";
             list_push(tokens, token);
             text++;
         }
@@ -32,7 +32,7 @@ List *tokenize(char* text) {
         else if (*text == ')') {
             token = malloc(sizeof(Token));
             token->type = TOK_CLS;
-            token->str_val = ")";
+            token->val = ")";
             list_push(tokens, token);
             text++;
         }
@@ -54,7 +54,7 @@ List *tokenize(char* text) {
 
             token = malloc(sizeof(Token));
             token->type = TOK_FUN;
-            token->str_val = form;
+            token->val = form;
             list_push(tokens, token);
         }
         // String token:
@@ -75,7 +75,7 @@ List *tokenize(char* text) {
 
             token = malloc(sizeof(Token));
             token->type = TOK_STR;
-            token->str_val = form;
+            token->val = form;
             list_push(tokens, token);
         } 
         else if (isdigit(*text)) {
@@ -93,7 +93,7 @@ List *tokenize(char* text) {
 
             token = malloc(sizeof(Token));
             token->type = TOK_INT;
-            token->int_val = atoi(form);
+            token->val = form;
             list_push(tokens, token);
         }
         else if (is_valid_token_neighbor(*text)) {

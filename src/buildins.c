@@ -5,9 +5,9 @@
 
 
 static Signature sigs[] = {
-    { "add", 2, { NODE_INT, NODE_INT }, NODE_INT },
-    { "sub", 2, { NODE_INT, NODE_INT }, NODE_INT },
-    { "strlen", 1, { NODE_STR }, NODE_INT },
+    { "add", 2, { T_INT, T_INT }, T_INT },
+    { "sub", 2, { T_INT, T_INT }, T_INT },
+    { "strlen", 1, { T_STR }, T_INT },
     { "_list_end" , 0, {}, 0}
 };
 

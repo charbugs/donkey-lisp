@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include "parse.h"
-#include "tokenize.h"
+#include "../src/parse.h"
+#include "../src/tokenize.h"
 
 
 int main(int argc, char *argv[]) {
@@ -12,8 +12,8 @@ int main(int argc, char *argv[]) {
     char *source = argv[1];
 
     List *tokens = tokenize(source);
-    Root *root = parse(tokens);
-    print_ast((Node*)root);
+    Node *root = parse(tokens);
+    print_ast(root);
 
     return 0;
 } 

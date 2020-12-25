@@ -14,16 +14,11 @@ int get_text(char *buf, int max, FILE *f) {
     return i - 1;
 }
 
-void print_result(Root *root) {
+void print_result(Node *root) {
     Node *child;
-    for (int i = 0; i < root->node.children->length; i++) {
-        child = list_get(root->node.children, i);
-        if (child->type == NODE_INT) {
-            printf("%d\n", ((Int*)child)->val);
-        }
-        else if (child->type == NODE_STR) {
-            printf("%s\n", ((Str*)child)->val);
-        }
+    for (int i = 0; i < root->children->length; i++) {
+        child = list_get(root->children, i);
+        printf("%s\n", child->val);
     }
 }
 
@@ -44,7 +39,7 @@ int main(int argc, char *argv[]) {
 
     get_text(text, MAX_TEXT_LEN, f);
     List *tokens = tokenize(text);
-    Root *root = parse(tokens);
+    Node *root = parse(tokens);
     exec(root);
     print_result(root);
 
