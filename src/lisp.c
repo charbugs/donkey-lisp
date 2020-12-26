@@ -2,6 +2,7 @@
 #include "tokenize.h"
 #include "parse.h"
 #include "exec.h"
+#include "stack.h"
 
 #define MAX_TEXT_LEN 10000
 
@@ -40,8 +41,10 @@ int main(int argc, char *argv[]) {
     get_text(text, MAX_TEXT_LEN, f);
     List *tokens = tokenize(text);
     Node *root = parse(tokens);
-    exec(root);
-    print_result(root);
+    print_ast(root);
+    Node *executed_root = exec(root);
+    print_stack();
+    print_result(executed_root);
 
     return 0;
 }

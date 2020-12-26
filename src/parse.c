@@ -30,24 +30,12 @@ static int has_matching_brackets(List *tokens) {
     return count == 0;
 }
 
-static int each_opening_bracket_is_followed_by_function_token(List *tokens) {
+static int each_opening_bracket_is_followed_by_identifier(List *tokens) {
     Token *left, *right;
     for (int i = 0; i < tokens->length - 1; i++) {
         left = list_get(tokens, i);
         right = list_get(tokens, i + 1);
-        if (left->type == TOK_OPN && right->type != TOK_FUN) {
-            return 0;
-        }
-    }
-    return 1;
-}
-
-static int function_name_can_only_appear_after_opening_bracket(List *tokens) {
-    Token *left, *right;
-    for (int i = 0; i < tokens->length - 1; i++) {
-        left = list_get(tokens, i);
-        right = list_get(tokens, i + 1);
-        if (right->type == TOK_FUN && left->type != TOK_OPN) {
+        if (left->type == TOK_OPN && right->type != TOK_IDF) {
             return 0;
         }
     }
@@ -63,12 +51,8 @@ static void check_token_syntax(List *tokens) {
         printf("parser: opening and closing brackets do not match\n");
         exit(1);
     }
-    if (!each_opening_bracket_is_followed_by_function_token(tokens)) {
-        printf("parser: each opening bracket must be followed by a function name\n");
-        exit(1);
-    }
-    if (!function_name_can_only_appear_after_opening_bracket(tokens)) {
-        printf("parser: function names must be placed directly after opening bracket\n");
+    if (!each_opening_bracket_is_followed_by_identifier(tokens)) {
+        printf("parser: each opening bracket must be followed by an identifier\n");
         exit(1);
     }
 }
@@ -87,9 +71,10 @@ Node *parse(List *tokens) {
         Token *token = list_get(tokens, i);
 
         if (token->type == TOK_OPN) {
-            // Get the function name token that follows the opening token.
-            Token *tok_fun = list_get(tokens, ++i);
-            Node *appl = new_node(T_APPL, tok_fun->val);
+            // Get the identifier token that follows the opening token
+            // and interpret it's value as a function name.
+            Token *tok_idf = list_get(tokens, ++i);
+            Node *appl = new_node(T_APPL, tok_idf->val);
             list_push(cur->children, appl);
             list_push(stack, cur);
             cur = appl;
@@ -97,6 +82,9 @@ Node *parse(List *tokens) {
         else if (token->type == TOK_CLS) {
             cur = list_pop(stack);
 
+        }
+        else if (token->type == TOK_IDF) {
+            list_push(cur->children, new_node(T_IDF, token->val));
         } 
         else if (token->type == TOK_STR) {
             list_push(cur->children, new_node(T_STR, token->val));
@@ -132,6 +120,7 @@ char* type_to_string(int type) {
         case 1: return "Appl";
         case 2: return "Str";
         case 3: return "Int";
+        case 4: return "Ident";
         default: return "Unknown";
     }
 }

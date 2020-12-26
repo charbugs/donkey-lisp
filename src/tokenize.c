@@ -36,7 +36,7 @@ List *tokenize(char* text) {
             list_push(tokens, token);
             text++;
         }
-        // Function name token:
+        // Identifier token:
         // is everything that starts with an alphabetic character ...
         else if (isalpha(*text)) {
             char *start = text;
@@ -53,7 +53,7 @@ List *tokenize(char* text) {
             }
 
             token = malloc(sizeof(Token));
-            token->type = TOK_FUN;
+            token->type = TOK_IDF;
             token->val = form;
             list_push(tokens, token);
         }

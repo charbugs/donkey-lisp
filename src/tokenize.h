@@ -5,7 +5,7 @@
 
 #define TOK_OPN 0
 #define TOK_CLS 1
-#define TOK_FUN 2
+#define TOK_IDF 2
 #define TOK_INT 3
 #define TOK_STR 4
 

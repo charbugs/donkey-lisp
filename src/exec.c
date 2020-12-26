@@ -4,6 +4,7 @@
 #include "exec.h"
 #include "parse.h"
 #include "buildins.h"
+#include "stack.h"
 
 
 static void check_signature(char* func, List *args) {
@@ -84,6 +85,15 @@ static Node *resolve (Node *node) {
         return node;
     }
 
+    if (node->type == T_IDF) {
+        Node *stack_item = stack_get(node->val);
+        if (stack_item == NULL) {
+            printf("exec: could not find constant %s on the stack\n", node->val);
+            exit(1);
+        }
+        return stack_item;
+    }
+
     if (node->type == T_APPL) {
         for (int i = 0; i < node->children->length; i++) {
             child = list_get(node->children, i);
@@ -92,16 +102,39 @@ static Node *resolve (Node *node) {
         return call(node);
     }
 
-    printf("exec: resolve: unknown node type\n");
+    printf("exec: resolve: unknown node type %d\n", node->type);
     exit(1);
 }
 
-void exec(Node *root) {
+void handle_const(Node* appl) {
+    char *name = ((Node*)list_get(appl->children, 0))->val;
+    Node *item = list_get(appl->children, 1);
+
+    if (stack_get(name) == NULL) {
+        stack_push(name, resolve(item));
+    } else {
+        printf("exec: trying to overwrite constant %s\n", name);
+        exit(1);
+    }
+
+}
+
+Node *exec(Node *root) {
     Node *child;
+    Node *new_root = new_node(T_ROOT, "executed root");
     for (int i = 0; i < root->children->length; i++) {
+
         child = list_get(root->children, i);
+        
         if (child->type == T_APPL) {
-            list_replace(root->children, i, resolve(child));
+            if (strcmp(child->val, "const") == 0) {
+                handle_const(child);
+            }
+            else {
+                list_push(new_root->children, resolve(child));
+            }
         }
     }
+
+    return new_root;
 }

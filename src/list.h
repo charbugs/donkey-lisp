@@ -21,6 +21,6 @@ void *list_pop(List *list);
 // Replace the `pos` element and return the replaced element
 // or NULL when nothing was replaced.
 void *list_replace(List *list, int pos, void *value);
-
+// void *list_remove(List *list, int pos);
 
 #endif

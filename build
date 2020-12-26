@@ -8,5 +8,6 @@ gcc -Wall -Wextra -o bin/lisp \
     src/tokenize.c \
     src/parse.c \
     src/buildins.c \
-    src/exec.c
+    src/exec.c \
+    src/stack.c
 

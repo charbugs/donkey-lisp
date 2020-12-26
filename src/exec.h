@@ -3,6 +3,6 @@
 
 #include "parse.h"
 
-void exec(Node *root);
+Node *exec(Node *root);
 
 #endif
