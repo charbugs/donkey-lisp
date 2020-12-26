@@ -21,12 +21,27 @@ static char* itos(int i) {
     return s;
 }
 
-static void check_args(char *func, List* args, int len, int types[]) {
+static int to_boolean(Node *node) {
+    if (node->type == T_INT) {
+        return atoi(node->val) != 0;
+    } else if (node->type == T_STR) {
+        return strlen(node->val) > 0;
+    } else {
+        printf("can not evaluate value of type %d to boolean\n", node->type);
+        exit(1);
+    }
+}
+
+static void check_args_len(char* func, List* args, int len) {
     if (len != args->length) {
         printf("buildins: expected %d arguments for function %s but got %d\n",
             len, func, args->length);
         exit(1);
     }
+}
+
+static void check_args(char *func, List* args, int len, int types[]) {
+    check_args_len(func, args, len);
 
     for (int i = 0; i < len; i++) {
         Node *arg = list_get(args, i);
@@ -81,6 +96,7 @@ Node *buildin_strlen(List *args) {
 }
 
 Node *buildin_const(List *args) {
+    check_args_len("const", args, 2);
     Node *idf = list_get(args, 0);
     Node *const_node = resolve(list_get(args, 1));
     if (idf->type != T_IDF) {
@@ -102,4 +118,17 @@ Node *buildin_const(List *args) {
 
     stack_push(idf->val, const_node);
     return const_node;
+}
+
+Node *buildin_if(List* args) {
+    check_args_len("if", args, 3);
+    Node *condition = list_get(args, 0);
+    Node *true_node = list_get(args, 1);
+    Node *false_node = list_get(args, 2);
+
+    if (to_boolean(resolve(condition))) {
+        return resolve(true_node);       
+    } else {
+        return resolve(false_node);
+    }
 }
