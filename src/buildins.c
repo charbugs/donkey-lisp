@@ -32,24 +32,28 @@ static int to_boolean(Node *node) {
     }
 }
 
-static void check_args_len(char* func, List* args, int len) {
+static void assert_arg_type(char* func, Node *arg, int pos, int valid_type) {
+    if ((arg->type & valid_type) == 0) {
+        printf("assert args: expected typ<e %d for argument %d of function %s but got type %d\n",
+                valid_type, pos, func, arg->type);
+        exit(1);
+    }
+}
+
+static void assert_args_len(char* func, List *args, int len) {
     if (len != args->length) {
-        printf("buildins: expected %d arguments for function %s but got %d\n",
+        printf("assert args: expected %d arguments for function %s but got %d\n",
             len, func, args->length);
         exit(1);
     }
 }
 
-static void check_args(char *func, List* args, int len, int types[]) {
-    check_args_len(func, args, len);
+static void assert_args(char *func, List* args, int len, int valid_types[]) {
+    assert_args_len(func, args, len);
 
     for (int i = 0; i < len; i++) {
         Node *arg = list_get(args, i);
-        if (arg->type != types[i]) {
-            printf("buildins: expected type %d for argument %d of function %s but got type %d\n",
-                types[i], i, func, arg->type);
-            exit(1);
-        }
+        assert_arg_type(func, arg, i + 1, valid_types[i]);
     }
 }
 
@@ -59,8 +63,8 @@ static int _buildin_add (int x, int y) {
 
 Node *buildin_add(List *args) {
     args = resolve_all(args);
-    int types[] = { T_INT, T_INT};
-    check_args("add", args, 2, types);
+    int types[] = { T_INT, T_INT };
+    assert_args("add", args, 2, types);
     int arg1 = argtoi(args, 0);
     int arg2 = argtoi(args, 1);
     char *res = itos(_buildin_add(arg1, arg2));
@@ -74,8 +78,8 @@ static int _buildin_sub(int x, int y) {
 
 Node *buildin_sub(List *args) {
     args = resolve_all(args);
-    int types[] = { T_INT, T_INT};
-    check_args("sub", args, 2, types);
+    int types[] = { T_INT, T_INT };
+    assert_args("sub", args, 2, types);
     int arg1 = argtoi(args, 0);
     int arg2 = argtoi(args, 1);
     char *res = itos(_buildin_sub(arg1, arg2));   
@@ -88,28 +92,21 @@ static int _buildin_strlen(char* s) {
 
 Node *buildin_strlen(List *args) {
     args = resolve_all(args);
-    int types[] = { T_STR};
-    check_args("strlen", args, 1, types);
+    int types[] = { T_STR };
+    assert_args("strlen", args, 1, types);
     char* arg1 = argtos(args, 0);
     char *res = itos(_buildin_strlen(arg1));
     return new_node(T_INT, res);
 }
 
 Node *buildin_const(List *args) {
-    check_args_len("const", args, 2);
+    assert_args_len("const", args, 2);
+    // the identifier node must not be resolved here
     Node *idf = list_get(args, 0);
+    assert_arg_type("const", idf, 1, T_IDF);
+    // so we resolve only the next argument to get the constant value
     Node *const_node = resolve(list_get(args, 1));
-    if (idf->type != T_IDF) {
-        printf ("buildin const: expected an identifier as first argument but got type %d\n",
-            idf->type);
-        exit(1);
-    }
-
-    if (const_node->type != T_INT && const_node->type != T_STR) {
-        printf("buildin const: can only put values of type int or string on the stack, got %d\n",
-            const_node->type);
-        exit(1);
-    }
+    assert_arg_type("const", const_node, 2, T_INT | T_STR);
 
     if (stack_get(idf->val) != NULL) {
         printf("buildin const: overwriting const values is not allowed: %s\n", idf->val);
@@ -121,7 +118,12 @@ Node *buildin_const(List *args) {
 }
 
 Node *buildin_if(List* args) {
-    check_args_len("if", args, 3);
+    int types[] = {
+        T_INT | T_STR | T_IDF | T_APPL,
+        T_INT | T_STR | T_IDF | T_APPL,
+        T_INT | T_STR | T_IDF | T_APPL,
+    };
+    assert_args("if", args, 3, types);
     Node *condition = list_get(args, 0);
     Node *true_node = list_get(args, 1);
     Node *false_node = list_get(args, 2);

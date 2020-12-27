@@ -116,11 +116,11 @@ void print_ast(Node *node) {
 
 char* type_to_string(int type) {
     switch(type) {
-        case 0: return "Root";
-        case 1: return "Appl";
-        case 2: return "Str";
-        case 3: return "Int";
-        case 4: return "Ident";
+        case 1: return "Root";
+        case 2: return "Int";
+        case 4: return "Str";
+        case 8: return "Ident";
+        case 16: return "Appl";
         default: return "Unknown";
     }
 }

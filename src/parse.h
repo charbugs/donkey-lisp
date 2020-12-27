@@ -4,11 +4,11 @@
 #include "list.h"
 #include "tokenize.h"
 
-#define T_ROOT 0
-#define T_APPL 1
-#define T_STR 2
-#define T_INT 3
-#define T_IDF 4
+#define T_ROOT  1
+#define T_INT   2
+#define T_STR   4
+#define T_IDF   8
+#define T_APPL  16
 
 typedef struct {
     List *children;
