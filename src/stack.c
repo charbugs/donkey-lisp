@@ -10,7 +10,7 @@ static int count = 0;
 void stack_push(char* name, Node* node) {
     int type = node->type;
     
-    if (type == T_INT || type == T_STR) {
+    if (type == T_INT || type == T_STR || T_APPL) {
         stack[count].name = name;
         stack[count].node = node;
         count++;
@@ -23,7 +23,7 @@ void stack_push(char* name, Node* node) {
 }
 
 Node *stack_get(char *name) {
-    for (int i = 0; i < count; i++) {
+    for (int i = count - 1; i > -1; i--) {
         if (strcmp(stack[i].name, name) == 0) {
             return stack[i].node;
         }
@@ -38,4 +38,12 @@ void print_stack() {
             type_to_string(stack[i].node->type),
             stack[i].node->val);
     }
+}
+
+Node *stack_pop() {
+    count--;
+    Node *ret = stack[count].node;
+    stack[count].node = NULL;
+    stack[count].name = "__removed__";
+    return ret;
 }

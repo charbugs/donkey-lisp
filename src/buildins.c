@@ -86,6 +86,34 @@ Node *buildin_sub(List *args) {
     return new_node(T_INT, res);
 }
 
+static int _buildin_mul(int x, int y) {
+    return x * y;
+}
+
+Node *buildin_mul(List *args) {
+    args = resolve_all(args);
+    int types[] = { T_INT, T_INT };
+    assert_args("sub", args, 2, types);
+    int arg1 = argtoi(args, 0);
+    int arg2 = argtoi(args, 1);
+    char *res = itos(_buildin_mul(arg1, arg2));   
+    return new_node(T_INT, res);
+}
+
+static int _buildin_div(int x, int y) {
+    return x / y;
+}
+
+Node *buildin_div(List *args) {
+    args = resolve_all(args);
+    int types[] = { T_INT, T_INT };
+    assert_args("sub", args, 2, types);
+    int arg1 = argtoi(args, 0);
+    int arg2 = argtoi(args, 1);
+    char *res = itos(_buildin_div(arg1, arg2));   
+    return new_node(T_INT, res);
+}
+
 static int _buildin_strlen(char* s) {
     return strlen(s);
 }
@@ -133,4 +161,35 @@ Node *buildin_if(List* args) {
     } else {
         return resolve(false_node);
     }
+}
+
+Node *buildin_def(Node *def) {
+    List *args = def->children;
+    int types[] = { T_IDF, T_APPL, T_APPL };
+    assert_args("def", args, 3, types);
+
+    Node *name = list_get(args, 0);
+    Node *params = list_get(args, 1);
+
+    if (strcmp(params->val, "params") != 0) {
+        printf("def: 2nd argument to def must be a parameter list: %s", name->val);
+        exit(1);
+    }
+    
+    for (int i = 0; i < params->children->length; i++) {
+        Node *param = list_get(params->children, i);
+        if (param->type != T_IDF) {
+            printf("def: each parameter must be an identifier: %s\n", name->val);
+            exit(1);
+        }
+    }
+
+    if (stack_get(name->val) != NULL) {
+        printf("def: redefine function is not allowed: %s\n", name->val);
+        exit(1);
+    }
+
+    // we store a pointer to the entire definition.
+    stack_push(name->val, def);
+    return name;   
 }
