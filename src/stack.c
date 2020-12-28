@@ -33,10 +33,10 @@ Node *stack_get(char *name) {
 
 void print_stack() {
     for (int i = 0; i < count; i++) {
-        printf("%s: %s: %s\n",
+        printf("%s: %s (%s)\n",
             stack[i].name,
-            type_to_string(stack[i].node->type),
-            stack[i].node->val);
+            stack[i].node->val,
+            type_to_string(stack[i].node->type));
     }
 }
 
