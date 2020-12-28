@@ -142,7 +142,7 @@ Node *buildin_const(List *args) {
     }
 
     stack_push(idf->val, const_node);
-    return const_node;
+    return new_node(T_UND, "");
 }
 
 Node *buildin_if(List* args) {
@@ -191,7 +191,7 @@ Node *buildin_def(Node *appl) {
 
     // we store a pointer to the entire definition node.
     stack_push(name->val, appl);
-    return name;   
+    return new_node(T_UND, "");   
 }
 
 static char *list_to_string(List *items) {

@@ -19,7 +19,9 @@ void print_result(Node *root) {
     Node *child;
     for (int i = 0; i < root->children->length; i++) {
         child = list_get(root->children, i);
-        printf("%s\n", child->val);
+        if (child->type != T_UND) {
+            printf("%s\n", child->val);
+        }
     }
 }
 

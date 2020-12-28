@@ -10,6 +10,7 @@
 #define T_IDF   8
 #define T_APPL  16
 #define T_LST   32
+#define T_UND   64
 
 
 typedef struct {
