@@ -3,7 +3,7 @@
 
 #include "parse.h"
 
-#define MAX_STACK_ITEMS 100
+#define MAX_STACK_ITEMS 1000
 
 typedef struct {
     char* name;

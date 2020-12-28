@@ -233,30 +233,69 @@ Node *buildin_list(List *args) {
 
 Node *buildin_head(List *args) {
     args = resolve_all(args);
-    int types[] = { T_LST };
+    int types[] = { T_LST | T_STR };
     assert_args("head", args, 1, types);
-
     Node *list = list_get(args, 0);
-    return list_get(list->children, 0);
+    
+    if (list->type == T_LST) {
+        Node *item = list_get(list->children, 0);
+        return item ? item : new_node(T_UND, "");
+    } 
+    else { // T_STR
+        if (strlen(list->val) == 0) {
+            return new_node(T_UND, "");
+        } else {
+            char* val = malloc(sizeof(char) * 2);
+            strncpy(val, list->val, 1);
+            return new_node(T_STR, val);    
+        }
+    }
 }
 
 Node *buildin_tail(List *args) {
     args = resolve_all(args);
-    int types[] = { T_LST };
+    int types[] = { T_LST | T_STR };
     assert_args("tail", args, 1, types);
-
     Node *list = list_get(args, 0);
-    List *items = list->children;
-    List *tail_items = list_create();
 
-    for (int i = 1; i < items->length; i++) {
-        list_push(tail_items, list_get(items, i));
+    if (list->type == T_LST) {
+        List *items = list->children;
+        List *tail_items = list_create();
+
+        for (int i = 1; i < items->length; i++) {
+            list_push(tail_items, list_get(items, i));
+        }
+
+        Node *new_list = new_node(T_LST, list_to_string(tail_items));
+        new_list->children = tail_items;
+        return new_list;
     }
+    else { // T_STR
+        int len = strlen(list->val);
+        if (len < 2) {
+            return new_node(T_STR, "");
+        } else {
+            char* tail_string = malloc(sizeof(char) * len);
+            strcpy(tail_string, ++list->val);
+            return new_node(T_STR, tail_string);
+        }
+    }
+}
 
-    Node *new_list = new_node(T_LST, list_to_string(tail_items));
-    new_list->children = tail_items;
-    
-    return new_list;
+Node *buildin_empty(List *args) {
+    args = resolve_all(args);
+    int types[] = { T_LST | T_STR };
+    assert_args("empty", args, 1, types);
+    Node *list = list_get(args, 0);
+
+    if (list->type == T_LST) {
+        return new_node(T_INT,
+            list->children->length == 0 ? "1" : "0");
+    }
+    else { // T_STR
+        return new_node(T_INT,
+            strlen(list->val) == 0 ? "1": "0");
+    }
 }
 
 Node *buildin_eq(List *args) {
