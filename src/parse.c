@@ -121,6 +121,7 @@ char* type_to_string(int type) {
         case 4: return "Str";
         case 8: return "Ident";
         case 16: return "Appl";
+        case 32: return "List";
         default: return "Unknown";
     }
 }

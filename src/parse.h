@@ -9,6 +9,8 @@
 #define T_STR   4
 #define T_IDF   8
 #define T_APPL  16
+#define T_LST   32
+
 
 typedef struct {
     List *children;

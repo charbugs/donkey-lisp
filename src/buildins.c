@@ -134,7 +134,7 @@ Node *buildin_const(List *args) {
     assert_arg_type("const", idf, 1, T_IDF);
     // so we resolve only the next argument to get the constant value
     Node *const_node = resolve(list_get(args, 1));
-    assert_arg_type("const", const_node, 2, T_INT | T_STR);
+    assert_arg_type("const", const_node, 2, T_INT | T_STR | T_LST);
 
     if (stack_get(idf->val) != NULL) {
         printf("buildin const: overwriting const values is not allowed: %s\n", idf->val);
@@ -163,8 +163,8 @@ Node *buildin_if(List* args) {
     }
 }
 
-Node *buildin_def(Node *def) {
-    List *args = def->children;
+Node *buildin_def(Node *appl) {
+    List *args = appl->children;
     int types[] = { T_IDF, T_APPL, T_APPL };
     assert_args("def", args, 3, types);
 
@@ -189,7 +189,87 @@ Node *buildin_def(Node *def) {
         exit(1);
     }
 
-    // we store a pointer to the entire definition.
-    stack_push(name->val, def);
+    // we store a pointer to the entire definition node.
+    stack_push(name->val, appl);
     return name;   
+}
+
+static char *list_to_string(List *items) {
+    int repr_bytes = 3;
+    char *repr = malloc(sizeof(char) * repr_bytes);
+    strcat(repr, "(");
+
+    for (int i = 0; i < items->length; i++) {
+        Node *node = list_get(items, i);
+        char *val = node->val;
+
+        if (node->type == T_STR) {
+            repr_bytes += strlen(val) + 4;
+            repr = realloc(repr, repr_bytes);
+            strcat(repr, "\"");
+            strcat(repr, val);
+            strcat(repr, "\"");
+        } else {
+            repr_bytes += strlen(val) + 2;
+            repr = realloc(repr, repr_bytes);
+            strcat(repr, val);
+        }
+
+        if (i < (items->length - 1)) {
+            strcat(repr, ", ");
+        }
+    }
+    
+    strcat(repr, ")");
+    return repr;
+}
+
+Node *buildin_list(List *args) {
+    args = resolve_all(args);
+    Node* list = new_node(T_LST, list_to_string(args));
+    list->children = args;
+    return list;
+}
+
+Node *buildin_head(List *args) {
+    args = resolve_all(args);
+    int types[] = { T_LST };
+    assert_args("head", args, 1, types);
+
+    Node *list = list_get(args, 0);
+    return list_get(list->children, 0);
+}
+
+Node *buildin_tail(List *args) {
+    args = resolve_all(args);
+    int types[] = { T_LST };
+    assert_args("tail", args, 1, types);
+
+    Node *list = list_get(args, 0);
+    List *items = list->children;
+    List *tail_items = list_create();
+
+    for (int i = 1; i < items->length; i++) {
+        list_push(tail_items, list_get(items, i));
+    }
+
+    Node *new_list = new_node(T_LST, list_to_string(tail_items));
+    new_list->children = tail_items;
+    
+    return new_list;
+}
+
+Node *buildin_eq(List *args) {
+    args = resolve_all(args);
+    assert_args_len("eq", args, 2);
+    Node *left = list_get(args, 0);
+    Node *right = list_get(args, 1);
+
+    if (left->type == right->type &&
+        strcmp(left->val, right->val) == 0) 
+    {
+        return new_node(T_INT, "1");
+    }
+
+    return new_node(T_INT, "0");
 }
