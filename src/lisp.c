@@ -5,7 +5,7 @@
 #include "resolve.h"
 #include "stack.h"
 
-#define MAX_TEXT_LEN 10000
+#define MAX_TEXT_LEN 100000
 
 
 int get_text(char *buf, int max, FILE *f) {

@@ -8,6 +8,11 @@ static StackItem stack[MAX_STACK_ITEMS];
 static int count = 0;
 
 void stack_push(char* name, Node* node) {
+    if (count >= MAX_STACK_ITEMS) {
+        printf("reached stack size limit\n");
+        exit(1);
+    }
+
     int type = node->type;
     
     if (type == T_INT || type == T_STR || T_APPL) {
