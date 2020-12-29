@@ -17,6 +17,7 @@ Node *buildin_head(List *args);
 Node *buildin_tail(List *args);
 Node *buildin_eq(List *args);
 Node *buildin_empty(List *args);
+Node *buildin_cons(List *args);
 
 Node *buildin_strlen(List *args);
 

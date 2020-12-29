@@ -312,3 +312,35 @@ Node *buildin_eq(List *args) {
 
     return new_node(T_INT, "0");
 }
+
+Node *buildin_cons(List *args) {
+    args = resolve_all(args);
+    int types[] = { T_INT | T_STR | T_LST , T_LST | T_STR };
+    assert_args("cons", args, 2, types);
+    Node *left = list_get(args, 0);
+    Node *right = list_get(args, 1);
+    
+    if (right->type == T_LST) {
+        List *items = list_create();
+        list_push(items, left);
+
+        for (int i = 0; i < right->children->length; i++) {
+            list_push(items, list_get(right->children, i));
+        }
+
+        Node *list = new_node(T_LST, list_to_string(items));
+        list->children = items;
+        return list;
+    }
+    else { // right->type == T_STR
+        if (left->type != T_STR) {
+            printf("cons: left must be string if right is a string, got:%d\n", left->type);
+            exit(1);
+        }
+
+        char* string = malloc(sizeof(char) * (strlen(left->val) + strlen(right->val) + 1));
+        strcat(string, left->val);
+        strcat(string, right->val);
+        return new_node(T_STR, string);
+    }
+}
