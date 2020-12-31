@@ -83,7 +83,7 @@ int main(int argc, char *argv[]) {
     }
 
     char *include[] = {
-        "lib/filter.dl",
+        "lib/stdlib.dl",
         arg_fname,
         NULL // terminate list
     };

@@ -1,0 +1,22 @@
+
+(def _filter (params fn src dst)
+    (locals 
+        first (head src)
+        rest (tail src))
+    (if (empty src)
+        dst
+        (if (fn first)
+            (_filter fn rest (cons first dst))
+            (_filter fn rest dst))))
+(def filter (params fn lst)
+    (_filter fn lst (list)))
+
+
+(def _map (params fn src dst)
+    (if (empty src)
+        dst
+        (_map fn 
+            (tail src)
+            (cons (fn (head src)) dst))))
+(def map (params fn lst)
+    (_map fn lst (list)))

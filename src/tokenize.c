@@ -8,11 +8,15 @@ static int is_valid_token_neighbor(char c) {
     return c == ' ' || c == '\t' || c == '\n' || c == ')' || c == '(' || c == '\0';
 }
 
-static int is_valid_indentifier_char(char c) {
+static int is_valid_identifier_start(char c) {
     return isalpha(c) ||
         c == '_' || c == '?' ||
         c == '+' || c == '-' || c == '*' || c == '/' ||
         c == '=' || c == '<' || c == '>';
+}
+
+static int is_valid_identifier_rest(char c) {
+    return is_valid_identifier_start(c) || isdigit(c);
 }
 
 static char *substring(char *s, int n) {
@@ -44,10 +48,10 @@ List *tokenize(char* text) {
             text++;
         }
         // Identifier token:
-        else if (is_valid_indentifier_char(*text)) {
+        else if (is_valid_identifier_start(*text)) {
             char *start = text;
             
-            while (is_valid_indentifier_char(*text))
+            while (is_valid_identifier_rest(*text))
                 text++;
             
             char *form = substring(start, text - start);
