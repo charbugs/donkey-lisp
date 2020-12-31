@@ -20,9 +20,17 @@ static char* itos(int i) {
 static int to_boolean(Node *node) {
     if (node->type == T_INT) {
         return atoi(node->val) != 0;
-    } else if (node->type == T_STR) {
+    }
+    else if (node->type == T_STR) {
         return strlen(node->val) > 0;
-    } else {
+    }
+    else if (node->type == T_UND) {
+        return 0;
+    }
+    else if (node->type == T_LST) {
+        return 1;
+    }
+    else {
         printf("can not evaluate value of type %d to boolean\n", node->type);
         exit(1);
     }
@@ -130,9 +138,9 @@ Node *buildin_const(List *args) {
 
 Node *buildin_if(List* args) {
     int types[] = {
-        T_INT | T_STR | T_IDF | T_APPL,
-        T_INT | T_STR | T_IDF | T_APPL,
-        T_INT | T_STR | T_IDF | T_APPL,
+        T_INT | T_STR | T_IDF | T_APPL | T_UND,
+        T_INT | T_STR | T_IDF | T_APPL | T_UND,
+        T_INT | T_STR | T_IDF | T_APPL | T_UND,
     };
     assert_args("if", args, 3, types);
     Node *condition = list_get(args, 0);
