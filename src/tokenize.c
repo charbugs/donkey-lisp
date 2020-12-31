@@ -8,6 +8,13 @@ static int is_valid_token_neighbor(char c) {
     return c == ' ' || c == '\t' || c == '\n' || c == ')' || c == '(' || c == '\0';
 }
 
+static int is_valid_indentifier_char(char c) {
+    return isalpha(c) ||
+        c == '_' || c == '?' ||
+        c == '+' || c == '-' || c == '*' || c == '/' ||
+        c == '=' || c == '<' || c == '>';
+}
+
 static char *substring(char *s, int n) {
     char *sub = malloc(sizeof(char) * n + 1);
     strncpy(sub, s, n);
@@ -37,14 +44,10 @@ List *tokenize(char* text) {
             text++;
         }
         // Identifier token:
-        // is everything that starts with an alphabetic character
-        // or and underscore ..
-        else if (isalpha(*text) || *text == '_') {
+        else if (is_valid_indentifier_char(*text)) {
             char *start = text;
             
-            // ... followed by any alpha-numeric character or
-            // underscore or minus.
-            while (isalnum(*text) || *text == '-' || *text == '_' || *text == '?')
+            while (is_valid_indentifier_char(*text))
                 text++;
             
             char *form = substring(start, text - start);

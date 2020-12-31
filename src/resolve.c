@@ -75,10 +75,10 @@ static Node *resolve_appl(Node *appl) {
     if (strcmp(func, "str?") == 0) return buildin_isstr(args);
     if (strcmp(func, "list?") == 0) return buildin_islist(args);
     if (strcmp(func, "undefined?") == 0) return buildin_isundefined(args);
-    if (strcmp(func, "add") == 0) return buildin_add(args);
-    if (strcmp(func, "sub") == 0) return buildin_sub(args);
-    if (strcmp(func, "mul") == 0) return buildin_mul(args);
-    if (strcmp(func, "div") == 0) return buildin_div(args);
+    if (strcmp(func, "+") == 0) return buildin_add(args);
+    if (strcmp(func, "-") == 0) return buildin_sub(args);
+    if (strcmp(func, "*") == 0) return buildin_mul(args);
+    if (strcmp(func, "/") == 0) return buildin_div(args);
     if (strcmp(func, "const") == 0) return buildin_const(args);
     if (strcmp(func, "if") == 0) return buildin_if(args);    
     if (strcmp(func, "list") == 0) return buildin_list(args);
@@ -86,7 +86,7 @@ static Node *resolve_appl(Node *appl) {
     if (strcmp(func, "tail") == 0) return buildin_tail(args);
     if (strcmp(func, "last") == 0) return buildin_last(args);
     if (strcmp(func, "init") == 0) return buildin_init(args);
-    if (strcmp(func, "eq") == 0) return buildin_eq(args);
+    if (strcmp(func, "=") == 0) return buildin_eq(args);
     if (strcmp(func, "empty") == 0) return buildin_empty(args);
     if (strcmp(func, "cons") == 0) return buildin_cons(args);
     if (strcmp(func, "println") == 0) return buildin_println(args);
