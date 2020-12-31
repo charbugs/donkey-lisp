@@ -79,6 +79,7 @@ static Node *resolve_appl(Node *appl) {
     if (strcmp(func, "-") == 0) return buildin_sub(args);
     if (strcmp(func, "*") == 0) return buildin_mul(args);
     if (strcmp(func, "/") == 0) return buildin_div(args);
+    if (strcmp(func, "mod") == 0) return buildin_mod(args);
     if (strcmp(func, "const") == 0) return buildin_const(args);
     if (strcmp(func, "if") == 0) return buildin_if(args);    
     if (strcmp(func, "list") == 0) return buildin_list(args);

@@ -16,6 +16,7 @@ Node *buildin_add(List *args);
 Node *buildin_sub(List *args);
 Node *buildin_mul(List *args);
 Node *buildin_div(List *args);
+Node *buildin_mod(List *args);
 
 Node *buildin_list(List *args);
 Node *buildin_empty(List *args);

@@ -68,7 +68,7 @@ static int _buildin_add (int x, int y) {
 Node *buildin_add(List *args) {
     args = resolve_all(args);
     int types[] = { T_INT, T_INT };
-    assert_args("add", args, 2, types);
+    assert_args("+", args, 2, types);
     int arg1 = argtoi(args, 0);
     int arg2 = argtoi(args, 1);
     char *res = itos(_buildin_add(arg1, arg2));
@@ -83,7 +83,7 @@ static int _buildin_sub(int x, int y) {
 Node *buildin_sub(List *args) {
     args = resolve_all(args);
     int types[] = { T_INT, T_INT };
-    assert_args("sub", args, 2, types);
+    assert_args("-", args, 2, types);
     int arg1 = argtoi(args, 0);
     int arg2 = argtoi(args, 1);
     char *res = itos(_buildin_sub(arg1, arg2));   
@@ -97,7 +97,7 @@ static int _buildin_mul(int x, int y) {
 Node *buildin_mul(List *args) {
     args = resolve_all(args);
     int types[] = { T_INT, T_INT };
-    assert_args("sub", args, 2, types);
+    assert_args("*", args, 2, types);
     int arg1 = argtoi(args, 0);
     int arg2 = argtoi(args, 1);
     char *res = itos(_buildin_mul(arg1, arg2));   
@@ -111,7 +111,7 @@ static int _buildin_div(int x, int y) {
 Node *buildin_div(List *args) {
     args = resolve_all(args);
     int types[] = { T_INT, T_INT };
-    assert_args("sub", args, 2, types);
+    assert_args("/", args, 2, types);
     int arg1 = argtoi(args, 0);
     int arg2 = argtoi(args, 1);
     char *res = itos(_buildin_div(arg1, arg2));   
@@ -468,4 +468,13 @@ Node *buildin_isundefined(List *args) {
     assert_args_len("undefined?", args, 1);
     Node *node = list_get(args, 0);
     return new_node(T_INT, node->type == T_UND ? "1" : "0");   
+}
+
+Node *buildin_mod(List *args) {
+    args = resolve_all(args);
+    int types[] = { T_INT, T_INT };
+    assert_args("mod", args, 2, types);
+    Node *left = list_get(args, 0);
+    Node *right = list_get(args, 1);
+    return new_node(T_INT, itos(atoi(left->val) % atoi(right->val)));
 }
