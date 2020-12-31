@@ -164,18 +164,32 @@ Node *buildin_if(List* args) {
 }
 
 Node *buildin_def(Node *appl) {
+    Node *name, *params, *locals = NULL;
     List *args = appl->children;
-    int types[] = { T_IDF, T_APPL, T_APPL };
-    assert_args("def", args, 3, types);
 
-    Node *name = list_get(args, 0);
-    Node *params = list_get(args, 1);
-
-    if (strcmp(params->val, "params") != 0) {
-        printf("def: 2nd argument to def must be a parameter list: %s", name->val);
+    if (args->length == 3) {
+        int types[] = { T_IDF, T_APPL, T_APPL };
+        assert_args("def", args, 3, types);
+        name = list_get(args, 0);
+        params = list_get(args, 1);
+    }
+    else if (args->length == 4) {
+        int types[] = { T_IDF, T_APPL, T_APPL, T_APPL };
+        assert_args("def", args, 4, types);
+        name = list_get(args, 0);
+        params = list_get(args, 1);
+        locals = list_get(args, 2);
+    }
+    else {
+        printf("def takes 3 or 4 arguments got %d\n", args->length);
         exit(1);
     }
-    
+
+    if (strcmp(params->val, "params") != 0) {
+        printf("second argument to def must be a parameter list: %s", name->val);
+        exit(1);
+    }
+
     for (int i = 0; i < params->children->length; i++) {
         Node *param = list_get(params->children, i);
         if (param->type != T_IDF) {
@@ -184,14 +198,34 @@ Node *buildin_def(Node *appl) {
         }
     }
 
+    if (locals) {
+        if (strcmp(locals->val, "locals") != 0) {
+            printf("third parameter to def must be a locals list if 4 arguments were passed, got %s\n", locals->val);
+            exit(1);
+        }
+
+        if (locals->children->length % 2 != 0) {
+            printf("number of arguments to locals must be even\n");
+            exit(1);
+        }
+
+        for (int i = 0; i < locals->children->length; i +=2) {
+            Node *key = list_get(locals->children, i);
+            if (key->type != T_IDF) {
+                printf("expected an identifier at position %d in the locals list to %s but got %d\n",
+                    i, name->val, key->type);
+                exit(1);
+            }
+        }
+    }
+
     if (stack_get(name->val) != NULL) {
         printf("def: redefine function is not allowed: %s\n", name->val);
         exit(1);
     }
 
-    // we store a pointer to the entire definition node.
     stack_push(name->val, appl);
-    return new_node(T_UND, "");   
+    return new_node(T_UND, "");
 }
 
 static char *list_to_string(List *items) {
@@ -351,5 +385,14 @@ Node *buildin_println(List *args) {
     assert_args("println", args, 1, types);
     Node *node = list_get(args, 0);
     printf("%s\n", node->val);
+    return node;
+}
+
+Node *buildin_printstack(List *args) {
+    args = resolve_all(args);
+    int types[] = { T_STR | T_INT | T_LST | T_APPL | T_UND };
+    assert_args("printstack", args, 1, types);
+    Node *node = list_get(args, 0);
+    print_stack();
     return node;
 }

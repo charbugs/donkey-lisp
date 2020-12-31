@@ -20,6 +20,7 @@ Node *buildin_empty(List *args);
 Node *buildin_cons(List *args);
 
 Node *buildin_println(List *args);
+Node *buildin_printstack(List *args);
 
 Node *buildin_strlen(List *args);
 

@@ -8,8 +8,8 @@
 
 
 static Node* call(char* func, List *args) {
+    Node *params, *body, *locals = NULL;
     args = resolve_all(args);
-
     Node *def = stack_get(func); // T_APPL
     
     if (def == NULL) {
@@ -17,8 +17,18 @@ static Node* call(char* func, List *args) {
         exit(1);
     }
 
-    Node *params = list_get(def->children, 1); // T_APPL
-    Node *body = list_get(def->children, 2); // T_APPL
+    if (def->children->length == 3) {
+        params = list_get(def->children, 1); // T_APPL
+        body = list_get(def->children, 2); // T_APPL
+    }
+    else if (def->children->length == 4) {
+        params = list_get(def->children, 1); // T_APPL
+        locals = list_get(def->children, 2); // T_APPL
+        body = list_get(def->children, 3); // T_APPL
+    }
+    else {
+        // this case was already handled in buildin_def()
+    }
 
     if (args->length != params->children->length) {
         printf("call: expected %d arguments for function %s but got %d",
@@ -32,7 +42,21 @@ static Node* call(char* func, List *args) {
         stack_push(stack_item_name, stack_item_val);
     }
 
+    if (locals) {
+        for (int i = 0; i < locals->children->length; i += 2) {
+            char* stack_item_name = ((Node*)list_get(locals->children, i))->val;
+            Node* stack_item_val = resolve(list_get(locals->children, i + 1));
+            stack_push(stack_item_name, stack_item_val);
+        }
+    }
+
     Node *ret = resolve(body);
+
+    if (locals) {
+        for (int i = 0; i < locals->children->length; i += 2) {
+            stack_pop();
+        } 
+    }
 
     for (int i = 0; i < params->children->length; i++) {
         stack_pop();
@@ -61,7 +85,8 @@ static Node *resolve_appl(Node *appl) {
     if (strcmp(func, "eq") == 0) return buildin_eq(args);
     if (strcmp(func, "empty") == 0) return buildin_empty(args);
     if (strcmp(func, "cons") == 0) return buildin_cons(args);
-    if (strcmp(func, "println") == 0) return buildin_println(args);    
+    if (strcmp(func, "println") == 0) return buildin_println(args);
+    if (strcmp(func, "printstack") == 0) return buildin_printstack(args);    
     if (strcmp(func, "def") == 0) return buildin_def(appl);
 
     return call(func, args);
