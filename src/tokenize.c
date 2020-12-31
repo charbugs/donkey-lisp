@@ -37,13 +37,15 @@ List *tokenize(char* text) {
             text++;
         }
         // Identifier token:
-        // is everything that starts with an alphabetic character ...
-        else if (isalpha(*text)) {
+        // is everything that starts with an alphabetic character
+        // or and underscore ..
+        else if (isalpha(*text) || *text == '_') {
             char *start = text;
             
-            // ... followed by any alpha-numberic character.
-            while (isalnum(*(++text)))
-                ;
+            // ... followed by any alpha-numeric character or
+            // underscore or minus.
+            while (isalnum(*text) || *text == '-' || *text == '_')
+                text++;
             
             char *form = substring(start, text - start);
 
