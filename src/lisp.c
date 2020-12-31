@@ -9,9 +9,28 @@
 
 
 int get_text(char *buf, int max, FILE *f) {
-    char c; int i;
-    for (i = 0; (i < max - 1) && ((c = getc(f)) != EOF); i++) {
-        buf[i] = c;
+    int i = 0,
+        in_comment = 0;
+    char c;
+
+    if (max < 1) {
+        return 0;
+    } 
+
+    while ((i < max - 1) && ((c = getc(f)) != EOF)) {
+        if (in_comment) {
+            if (c == '\n') {
+                buf[i++] = c;
+                in_comment = 0;
+            }
+        } else { 
+            if (c == ';') {
+                in_comment = 1;       
+            } else {
+                buf[i++] = c;
+            }
+
+        }
     }
     buf[i] = '\0';
     return i - 1;
@@ -57,6 +76,8 @@ int main(int argc, char *argv[]) {
     }
 
     get_text(text, MAX_TEXT_LEN, f);
+    printf("%s\n", text);
+
     List *tokens = tokenize(text);
     Node *root = parse(tokens);
     
