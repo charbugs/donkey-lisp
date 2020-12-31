@@ -31,6 +31,10 @@ Node *buildin_init(List *args);
 
 // compare
 Node *buildin_eq(List *args);
+Node *buildin_lt(List *args);
+Node *buildin_gt(List *args);
+Node *buildin_le(List *args);
+Node *buildin_ge(List *args);
 
 //logic
 Node *buildin_not(List *args);

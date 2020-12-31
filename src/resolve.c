@@ -88,6 +88,10 @@ static Node *resolve_appl(Node *appl) {
     if (strcmp(func, "last") == 0) return buildin_last(args);
     if (strcmp(func, "init") == 0) return buildin_init(args);
     if (strcmp(func, "=") == 0) return buildin_eq(args);
+    if (strcmp(func, "<") == 0) return buildin_lt(args);
+    if (strcmp(func, ">") == 0) return buildin_gt(args);
+    if (strcmp(func, "<=") == 0) return buildin_le(args);
+    if (strcmp(func, ">=") == 0) return buildin_ge(args);
     if (strcmp(func, "not") == 0) return buildin_not(args);
     if (strcmp(func, "and") == 0) return buildin_and(args);
     if (strcmp(func, "or") == 0) return buildin_or(args);
