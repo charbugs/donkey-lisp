@@ -66,15 +66,16 @@ int main(int argc, char *argv[]) {
         printf("\n");
     }
     
-    Node *resolved_root = resolve(root);
-    
+    // Node *resolved_root = resolve(root);
+    resolve(root);
+
     if (arg_print_stack) {
         printf("======== STACK ========\n");
         print_stack();
         printf("\n");
     }
     
-    print_result(resolved_root);
+    // print_result(resolved_root);
 
     return 0;
 }

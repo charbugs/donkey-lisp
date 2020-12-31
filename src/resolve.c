@@ -61,7 +61,8 @@ static Node *resolve_appl(Node *appl) {
     if (strcmp(func, "eq") == 0) return buildin_eq(args);
     if (strcmp(func, "empty") == 0) return buildin_empty(args);
     if (strcmp(func, "cons") == 0) return buildin_cons(args);
-    if (strcmp(func, "def") == 0) return buildin_def(appl);    
+    if (strcmp(func, "println") == 0) return buildin_println(args);    
+    if (strcmp(func, "def") == 0) return buildin_def(appl);
 
     return call(func, args);
 }
