@@ -11,8 +11,6 @@
 #define T_APPL  16
 #define T_LST   32
 #define T_UND   64
-#define T_DCT  128
-
 
 typedef struct {
     List *children;

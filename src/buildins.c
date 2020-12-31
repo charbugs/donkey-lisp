@@ -11,10 +11,6 @@ static int argtoi(List *args, int pos) {
     return atoi(((Node*)list_get(args, pos))->val);
 }
 
-static char* argtos(List *args, int pos) {
-    return ((Node*)list_get(args, pos))->val;
-}
-
 static char* itos(int i) {
     char *s = malloc(sizeof(char) * 20);
     sprintf(s, "%d", i);
@@ -111,19 +107,6 @@ Node *buildin_div(List *args) {
     int arg1 = argtoi(args, 0);
     int arg2 = argtoi(args, 1);
     char *res = itos(_buildin_div(arg1, arg2));   
-    return new_node(T_INT, res);
-}
-
-static int _buildin_strlen(char* s) {
-    return strlen(s);
-}
-
-Node *buildin_strlen(List *args) {
-    args = resolve_all(args);
-    int types[] = { T_STR };
-    assert_args("strlen", args, 1, types);
-    char* arg1 = argtos(args, 0);
-    char *res = itos(_buildin_strlen(arg1));
     return new_node(T_INT, res);
 }
 
@@ -449,4 +432,32 @@ Node *buildin_printstack(List *args) {
     Node *node = list_get(args, 0);
     print_stack();
     return node;
+}
+
+Node *buildin_isint(List *args) {
+    args = resolve_all(args);
+    assert_args_len("int?", args, 1);
+    Node *node = list_get(args, 0);
+    return new_node(T_INT, node->type == T_INT ? "1" : "0");   
+}
+
+Node *buildin_isstr(List *args) {
+    args = resolve_all(args);
+    assert_args_len("str?", args, 1);
+    Node *node = list_get(args, 0);
+    return new_node(T_INT, node->type == T_STR ? "1" : "0");   
+}
+
+Node *buildin_islist(List *args) {
+    args = resolve_all(args);
+    assert_args_len("list?", args, 1);
+    Node *node = list_get(args, 0);
+    return new_node(T_INT, node->type == T_LST ? "1" : "0");   
+}
+
+Node *buildin_isundefined(List *args) {
+    args = resolve_all(args);
+    assert_args_len("undefined?", args, 1);
+    Node *node = list_get(args, 0);
+    return new_node(T_INT, node->type == T_UND ? "1" : "0");   
 }

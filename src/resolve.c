@@ -71,11 +71,14 @@ static Node *resolve_appl(Node *appl) {
 
     // TODO: lookup table that maps function names to ints 
     // so that we can avoid that many strcmps
+    if (strcmp(func, "int?") == 0) return buildin_isint(args);
+    if (strcmp(func, "str?") == 0) return buildin_isstr(args);
+    if (strcmp(func, "list?") == 0) return buildin_islist(args);
+    if (strcmp(func, "undefined?") == 0) return buildin_isundefined(args);
     if (strcmp(func, "add") == 0) return buildin_add(args);
     if (strcmp(func, "sub") == 0) return buildin_sub(args);
     if (strcmp(func, "mul") == 0) return buildin_mul(args);
     if (strcmp(func, "div") == 0) return buildin_div(args);
-    if (strcmp(func, "strlen") == 0) return buildin_strlen(args);
     if (strcmp(func, "const") == 0) return buildin_const(args);
     if (strcmp(func, "if") == 0) return buildin_if(args);    
     if (strcmp(func, "list") == 0) return buildin_list(args);

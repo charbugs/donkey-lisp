@@ -44,7 +44,7 @@ List *tokenize(char* text) {
             
             // ... followed by any alpha-numeric character or
             // underscore or minus.
-            while (isalnum(*text) || *text == '-' || *text == '_')
+            while (isalnum(*text) || *text == '-' || *text == '_' || *text == '?')
                 text++;
             
             char *form = substring(start, text - start);
