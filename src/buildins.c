@@ -316,6 +316,60 @@ Node *buildin_tail(List *args) {
     }
 }
 
+Node *buildin_init(List *args) {
+    args = resolve_all(args);
+    int types[] = { T_LST | T_STR };
+    assert_args("init", args, 1, types);
+    Node *list = list_get(args, 0);
+
+    if (list->type == T_LST) {
+        List *items = list->children;
+        List *init_items = list_create();
+
+        for (int i = 0; i < items->length - 1; i++) {
+            list_push(init_items, list_get(items, i));
+        }
+
+        Node *new_list = new_node(T_LST, list_to_string(init_items));
+        new_list->children = init_items;
+        return new_list;
+    }
+    else {
+        int len = strlen(list->val);
+        if (len < 2) {
+            return new_node(T_STR, "");
+        } else {
+            char* init_string = malloc(sizeof(char) * len);
+            strncpy(init_string, list->val, len - 1);
+            init_string[len - 1] = '\0';
+            return new_node(T_STR, init_string);
+        }
+    }
+}
+
+Node *buildin_last(List *args) {
+    args = resolve_all(args);
+    int types[] = { T_LST | T_STR };
+    assert_args("last", args, 1, types);
+    Node *list = list_get(args, 0);
+
+
+    if (list->type == T_LST) {
+        Node *item = list_last(list->children);
+        return item ? item : new_node(T_UND, "");
+    }
+    else { // T_STR
+        if (strlen(list->val) == 0) {
+            return new_node(T_UND, "");
+        } else {
+            char* val = malloc(sizeof(char) * 2);
+            int off = strlen(list->val) - 1;
+            strncpy(val, list->val + off, 1);
+            return new_node(T_STR, val);    
+        }
+    }
+}
+
 Node *buildin_empty(List *args) {
     args = resolve_all(args);
     int types[] = { T_LST | T_STR };

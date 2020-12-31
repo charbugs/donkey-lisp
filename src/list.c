@@ -30,7 +30,7 @@ int list_push(List *list, void *value) {
 }
 
 void *list_get(List *list, int pos) {
-    if (pos >= list->length) {
+    if (pos >= list->length || pos < 0) {
         return NULL;
     }
 

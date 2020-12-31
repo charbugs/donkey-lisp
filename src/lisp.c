@@ -68,6 +68,8 @@ int main(int argc, char *argv[]) {
     int arg_print_ast = 0;
     char *arg_fname = NULL;
 
+    printf("debug\n");
+
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "-a") == 0) {
             arg_print_ast = 1;
@@ -88,11 +90,10 @@ int main(int argc, char *argv[]) {
         NULL // terminate list
     };
 
-
     char *text = get_text(include);
     List *tokens = tokenize(text);
     Node *root = parse(tokens);
-    
+
     if (arg_print_ast) {
         printf("======== AST ========\n");
         print_ast(root);
