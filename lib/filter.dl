@@ -1,0 +1,15 @@
+(def _filter (params fn src dst)
+    (locals 
+        first (head src)
+        rest (tail src))
+    (if (empty src)
+        dst
+        (if (fn first)
+            (_filter fn rest (cons first dst))
+            (_filter fn rest dst))))
+
+; fn: (src[i]) -> bool
+; src: list
+; return: list
+(def filter (params fn src)
+    (_filter fn src (list)))
