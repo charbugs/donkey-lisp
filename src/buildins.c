@@ -420,6 +420,25 @@ Node *buildin_and(List *args) {
     return node;
 }
 
+Node *buildin_or(List *args) {
+    args = resolve_all(args);
+    Node *node;
+
+    if (args->length < 1) {
+        printf("or: need at least one argument\n");
+        exit(1);
+    }
+
+    for (int i = 0; i < args->length; i++) {
+        node = list_get(args, i);
+        if (to_boolean(node)) {
+            break;
+        }
+    }
+    
+    return node;
+}
+
 Node *buildin_cons(List *args) {
     args = resolve_all(args);
     int types[] = { T_INT | T_STR | T_LST , T_LST | T_STR };

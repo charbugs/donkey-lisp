@@ -35,6 +35,7 @@ Node *buildin_eq(List *args);
 //logic
 Node *buildin_not(List *args);
 Node *buildin_and(List *args);
+Node *buildin_or(List *args);
 
 // io
 Node *buildin_println(List *args);
