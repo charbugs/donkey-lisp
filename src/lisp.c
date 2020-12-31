@@ -68,8 +68,6 @@ int main(int argc, char *argv[]) {
     int arg_print_ast = 0;
     char *arg_fname = NULL;
 
-    printf("debug\n");
-
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "-a") == 0) {
             arg_print_ast = 1;
