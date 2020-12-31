@@ -7,17 +7,20 @@ Node *buildin_def(Node *appl);
 Node *buildin_const(List *args);
 Node *buildin_if(List* args);
 
+// type checkt
 Node *buildin_isint(List *args);
 Node *buildin_isstr(List *args);
 Node *buildin_isundefined(List *args);
 Node *buildin_islist(List *args);
 
+// math
 Node *buildin_add(List *args);
 Node *buildin_sub(List *args);
 Node *buildin_mul(List *args);
 Node *buildin_div(List *args);
 Node *buildin_mod(List *args);
 
+// list
 Node *buildin_list(List *args);
 Node *buildin_empty(List *args);
 Node *buildin_cons(List *args);
@@ -26,7 +29,9 @@ Node *buildin_tail(List *args);
 Node *buildin_last(List *args);
 Node *buildin_init(List *args);
 
+// logic
 Node *buildin_eq(List *args);
+Node *buildin_not(List *args);
 
 Node *buildin_println(List *args);
 

@@ -392,6 +392,16 @@ Node *buildin_eq(List *args) {
     return new_node(T_INT, "0");
 }
 
+Node *buildin_not(List *args) {
+    args = resolve_all(args);
+    assert_args_len("not", args, 1);
+    Node *node = list_get(args, 0);
+    return to_boolean(node) == 1
+        ? new_node(T_INT, "0")
+        : new_node(T_INT, "1");
+}
+
+
 Node *buildin_cons(List *args) {
     args = resolve_all(args);
     int types[] = { T_INT | T_STR | T_LST , T_LST | T_STR };
