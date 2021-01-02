@@ -15,9 +15,6 @@ int main(int argc, char *argv[]) {
     }
 
     char *text = get_text(++argv, argc - 1);
-
-    printf("%s\n", text);
-
     List *tokens = tokenize(text);
     Node *root = parse(tokens);
     resolve(root);

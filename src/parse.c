@@ -14,7 +14,10 @@ Node *new_node(int type, char *val) {
 static int is_wrapped_by_brackets(List *tokens) {
     Token *first = list_get(tokens, 0);
     Token *last = list_last(tokens);
-    return first->type == TOK_OPN && last->type == TOK_CLS; 
+
+    return first && last &&
+        first->type == TOK_OPN &&
+        last->type == TOK_CLS; 
 }
 
 static int has_matching_brackets(List *tokens) {
@@ -59,7 +62,7 @@ static void check_token_syntax(List *tokens) {
 
 // List<Token> *tokens
 Node *parse(List *tokens) {
-    
+
     check_token_syntax(tokens);
 
     // List<Node> *stack
