@@ -16,7 +16,7 @@ Node *buildin_const(List *args) {
     }
 
     stack_push(idf->val, const_node);
-    return new_node(T_UND, "");
+    return new_node(T_UND, "undefined");
 }
 
 Node *buildin_if(List* args) {
@@ -99,5 +99,5 @@ Node *buildin_def(Node *appl) {
     }
 
     stack_push(name->val, appl);
-    return new_node(T_UND, "");
+    return new_node(T_UND, "undefined");
 }

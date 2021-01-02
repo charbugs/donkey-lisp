@@ -46,11 +46,11 @@ Node *buildin_head(List *args) {
     
     if (list->type == T_LST) {
         Node *item = list_get(list->children, 0);
-        return item ? item : new_node(T_UND, "");
+        return item ? item : new_node(T_UND, "undefined");
     } 
     else { // T_STR
         if (strlen(list->val) == 0) {
-            return new_node(T_UND, "");
+            return new_node(T_UND, "undefined");
         } else {
             char* val = malloc(sizeof(char) * 2);
             strncpy(val, list->val, 1);
@@ -129,11 +129,11 @@ Node *buildin_last(List *args) {
 
     if (list->type == T_LST) {
         Node *item = list_last(list->children);
-        return item ? item : new_node(T_UND, "");
+        return item ? item : new_node(T_UND, "undefined");
     }
     else { // T_STR
         if (strlen(list->val) == 0) {
-            return new_node(T_UND, "");
+            return new_node(T_UND, "undefined");
         } else {
             char* val = malloc(sizeof(char) * 2);
             int off = strlen(list->val) - 1;
