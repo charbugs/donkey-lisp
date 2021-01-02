@@ -3,7 +3,7 @@
     (locals 
         first (head src)
         rest (tail src))
-    (if (empty src)
+    (if (empty? src)
         dst
         (if (fn first)
             (_filter fn rest (cons first dst))
@@ -13,7 +13,7 @@
 
 
 (def _map (params fn src dst)
-    (if (empty src)
+    (if (empty? src)
         dst
         (_map fn 
             (tail src)

@@ -7,7 +7,15 @@ gcc -Wall -Wextra -o bin/lisp \
     src/list.c \
     src/tokenize.c \
     src/parse.c \
-    src/buildins.c \
     src/resolve.c \
-    src/stack.c
+    src/stack.c \
+    src/buildins/compare.c \
+    src/buildins/debug.c \
+    src/buildins/io.c \
+    src/buildins/list.c \
+    src/buildins/logic.c \
+    src/buildins/math.c \
+    src/buildins/misc.c \
+    src/buildins/typecheck.c \
+    src/buildins/utils.c
 

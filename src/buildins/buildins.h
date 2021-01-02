@@ -1,8 +1,21 @@
 #ifndef BUILDINS_H
 #define BUILDINS_H
 
-#include "parse.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
+#include "../parse.h"
+#include "../resolve.h"
+#include "../stack.h"
+
+// utils
+int to_boolean(Node *node);
+void assert_arg_type(char* func, Node *arg, int pos, int valid_type);
+void assert_args_len(char* func, List *args, int len);
+void assert_args(char *func, List* args, int len, int valid_types[]);
+
+// misc
 Node *buildin_def(Node *appl);
 Node *buildin_const(List *args);
 Node *buildin_if(List* args);
@@ -22,7 +35,7 @@ Node *buildin_mod(List *args);
 
 // list
 Node *buildin_list(List *args);
-Node *buildin_empty(List *args);
+Node *buildin_isempty(List *args);
 Node *buildin_cons(List *args);
 Node *buildin_head(List *args);
 Node *buildin_tail(List *args);
