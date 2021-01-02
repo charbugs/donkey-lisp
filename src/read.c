@@ -22,20 +22,15 @@ static int read_file(char *buf, int max, FILE *f) {
             } else {
                 buf[i++] = c;
             }
-
         }
-    }
-
-    if (i >= max) {
-        printf("reached file size limit\n");
-        exit(1);
     }
 
     return i;
 }
 
 char *get_text(char *files[], int len) {
-    int text_size = 0; 
+    int text_size = 0;
+    long fsize;
     char *text = NULL, *cur;
     FILE *f;
 
@@ -48,9 +43,13 @@ char *get_text(char *files[], int len) {
             exit(1);
         }
 
-        text = realloc(text, text_size + MAX_FILE_SIZE + 1);
+        fseek(f, 0L, SEEK_END);
+        fsize = ftell(f);
+        rewind(f);
+
+        text = realloc(text, text_size + fsize + 1);
         cur = text + text_size;
-        text_size += read_file(cur, MAX_FILE_SIZE, f);
+        text_size += read_file(cur, fsize, f);
         fclose(f);
     }
 
