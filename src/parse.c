@@ -123,6 +123,7 @@ char* type_to_string(int type) {
         case 16: return "Appl";
         case 32: return "List";
         case 64: return "Undefined";
+        case 128: return "Func";
         default: return "Unknown";
     }
 }

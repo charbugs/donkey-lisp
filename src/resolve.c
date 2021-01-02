@@ -7,46 +7,51 @@
 #include "stack.h"
 
 
-static Node* call(char* func, List *args) {
-    Node *params, *body, *locals = NULL;
+static Node* call(char* fname, List *args) {
     args = resolve_all(args);
-    Node *def = stack_get(func); // T_APPL
     
-    if (def == NULL) {
-        printf("call: could not find function %s\n", func);
+    Node *body, *locals, *param, *func = stack_get(fname); // T_FUN
+    int param_len = 0;
+    
+    if (func == NULL) {
+        printf("call: could not find function %s\n", fname);
         exit(1);
     }
 
-    if (def->children->length == 3) {
-        params = list_get(def->children, 1); // T_APPL
-        body = list_get(def->children, 2); // T_APPL
-    }
-    else if (def->children->length == 4) {
-        params = list_get(def->children, 1); // T_APPL
-        locals = list_get(def->children, 2); // T_APPL
-        body = list_get(def->children, 3); // T_APPL
-    }
-    else {
-        // this case was already handled in buildin_def()
+    for (int i = 0; i < func->children->length - 1; i++) {
+        param = list_get(func->children, i);
+        if (param->type != T_IDF) {
+            break;
+        } else {
+            param_len++;
+        }
     }
 
-    if (args->length != params->children->length) {
+    if (args->length != param_len) {
         printf("call: expected %d arguments for function %s but got %d",
-            params->children->length, func, args->length);
+            param_len, fname, args->length);
         exit(1);
     }
 
-    for (int i = 0; i < params->children->length; i++) {
-        char* stack_item_name = ((Node*)list_get(params->children, i))->val;
-        Node* stack_item_val = list_get(args, i);
-        stack_push(stack_item_name, stack_item_val);
+    for (int i = 0; i < param_len; i++) {
+        char* name = ((Node*)list_get(func->children, i))->val;
+        Node* object = list_get(args, i);
+        stack_push(name, object);
+    }
+    
+    if (list_get(func->children, param_len + 1) == NULL) {
+        locals = NULL;
+        body = list_get(func->children, param_len);
+    } else {
+        locals = list_get(func->children, param_len);
+        body = list_get(func->children, param_len + 1);
     }
 
     if (locals) {
         for (int i = 0; i < locals->children->length; i += 2) {
-            char* stack_item_name = ((Node*)list_get(locals->children, i))->val;
-            Node* stack_item_val = resolve(list_get(locals->children, i + 1));
-            stack_push(stack_item_name, stack_item_val);
+            char* name = ((Node*)list_get(locals->children, i))->val;
+            Node* object = resolve(list_get(locals->children, i + 1));
+            stack_push(name, object);
         }
     }
 
@@ -58,7 +63,7 @@ static Node* call(char* func, List *args) {
         } 
     }
 
-    for (int i = 0; i < params->children->length; i++) {
+    for (int i = 0; i < param_len; i++) {
         stack_pop();
     }
 
@@ -80,7 +85,7 @@ static Node *resolve_appl(Node *appl) {
     if (strcmp(func, "*") == 0) return buildin_mul(args);
     if (strcmp(func, "/") == 0) return buildin_div(args);
     if (strcmp(func, "mod") == 0) return buildin_mod(args);
-    if (strcmp(func, "const") == 0) return buildin_const(args);
+    if (strcmp(func, "define") == 0) return buildin_define(args);
     if (strcmp(func, "if") == 0) return buildin_if(args);    
     if (strcmp(func, "list") == 0) return buildin_list(args);
     if (strcmp(func, "head") == 0) return buildin_head(args);
@@ -99,7 +104,7 @@ static Node *resolve_appl(Node *appl) {
     if (strcmp(func, "cons") == 0) return buildin_cons(args);
     if (strcmp(func, "println") == 0) return buildin_println(args);
     if (strcmp(func, "printstack") == 0) return buildin_printstack(args);    
-    if (strcmp(func, "def") == 0) return buildin_def(appl);
+    if (strcmp(func, "->") == 0) return buildin_func(args);
 
     return call(func, args);
 }
@@ -128,6 +133,7 @@ Node *resolve(Node *node) {
     switch(node->type) {
         case T_INT: return node;
         case T_STR: return node;
+        case T_FUN: return node;
         case T_IDF: return resolve_idf(node);
         case T_APPL: return resolve_appl(node);
         case T_ROOT: return resolve_root(node);

@@ -1,22 +1,67 @@
 #include "buildins.h"
 
 
-Node *buildin_const(List *args) {
-    assert_args_len("const", args, 2);
+Node *buildin_define(List *args) {
+    assert_args_len("define", args, 2);
     // the identifier node must not be resolved here
     Node *idf = list_get(args, 0);
     assert_arg_type("const", idf, 1, T_IDF);
     // so we resolve only the next argument to get the constant value
-    Node *const_node = resolve(list_get(args, 1));
-    assert_arg_type("const", const_node, 2, T_INT | T_STR | T_LST);
+    Node *object = resolve(list_get(args, 1));
+    assert_arg_type("const", object, 2, T_INT | T_STR | T_LST | T_FUN);
 
     if (stack_get(idf->val) != NULL) {
-        printf("buildin const: overwriting const values is not allowed: %s\n", idf->val);
+        printf("define: overwriting constant values is not allowed: %s\n", idf->val);
         exit(1);
     }
 
-    stack_push(idf->val, const_node);
+    stack_push(idf->val, object);
     return new_node(T_UND, "undefined");
+}
+
+Node *buildin_func(List *args) {
+    Node *cur;
+    int i = args->length; 
+
+    // get last arg
+    cur = list_get(args, --i);
+    if (!cur) {
+        printf("func: function body missing\n");
+        exit(1);
+    }
+
+    // get second last arg
+    cur = list_get(args, --i);
+    if (cur && cur->type == T_APPL && strcmp(cur->val, "locals") == 0) {
+
+        if (cur->children->length % 2 != 0) {
+            printf("func: number of arguments to the locals list must be even (pairs of key and value)\n");
+            exit(1);
+        }
+
+        for (int i = 0; i < cur->children->length; i +=2) {
+            Node *key = list_get(cur->children, i);
+            if (key->type != T_IDF) {
+                printf("expected an identifier at position %d in the locals list but got %d\n",
+                    i, key->type);
+                exit(1);
+            }
+        }
+
+        // get third last arg
+        cur = list_get(args, --i);
+    }
+
+    while ((cur = list_get(args, i--)) != NULL) {
+        if (cur->type != T_IDF) {
+            printf("func: parameter list may only contain identifiers\n");
+            exit(1);
+        }
+    }
+
+    Node *func = new_node(T_FUN, "func");
+    func->children = args;
+    return func;
 }
 
 Node *buildin_if(List* args) {
@@ -35,69 +80,4 @@ Node *buildin_if(List* args) {
     } else {
         return resolve(false_node);
     }
-}
-
-Node *buildin_def(Node *appl) {
-    Node *name, *params, *locals = NULL;
-    List *args = appl->children;
-
-    if (args->length == 3) {
-        int types[] = { T_IDF, T_APPL, T_APPL };
-        assert_args("def", args, 3, types);
-        name = list_get(args, 0);
-        params = list_get(args, 1);
-    }
-    else if (args->length == 4) {
-        int types[] = { T_IDF, T_APPL, T_APPL, T_APPL };
-        assert_args("def", args, 4, types);
-        name = list_get(args, 0);
-        params = list_get(args, 1);
-        locals = list_get(args, 2);
-    }
-    else {
-        printf("def takes 3 or 4 arguments got %d\n", args->length);
-        exit(1);
-    }
-
-    if (strcmp(params->val, "params") != 0) {
-        printf("second argument to def must be a parameter list: %s", name->val);
-        exit(1);
-    }
-
-    for (int i = 0; i < params->children->length; i++) {
-        Node *param = list_get(params->children, i);
-        if (param->type != T_IDF) {
-            printf("def: each parameter must be an identifier: %s\n", name->val);
-            exit(1);
-        }
-    }
-
-    if (locals) {
-        if (strcmp(locals->val, "locals") != 0) {
-            printf("third parameter to def must be a locals list if 4 arguments were passed, got %s\n", locals->val);
-            exit(1);
-        }
-
-        if (locals->children->length % 2 != 0) {
-            printf("number of arguments to locals must be even\n");
-            exit(1);
-        }
-
-        for (int i = 0; i < locals->children->length; i +=2) {
-            Node *key = list_get(locals->children, i);
-            if (key->type != T_IDF) {
-                printf("expected an identifier at position %d in the locals list to %s but got %d\n",
-                    i, name->val, key->type);
-                exit(1);
-            }
-        }
-    }
-
-    if (stack_get(name->val) != NULL) {
-        printf("def: redefine function is not allowed: %s\n", name->val);
-        exit(1);
-    }
-
-    stack_push(name->val, appl);
-    return new_node(T_UND, "undefined");
 }
