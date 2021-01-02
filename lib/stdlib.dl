@@ -1,4 +1,14 @@
 
+; Takes a list and returns a new list that contains only
+; items of the source list that evaluate to true by the
+; passed function.
+;
+; fn: lst[i] -> boolean
+; lst: list
+; return: list
+(define filter (-> fn lst
+    (_filter fn lst (list))))
+
 (define _filter (-> fn src dst
     (locals 
         first (head src)
@@ -9,8 +19,14 @@
             (cons first (_filter fn rest dst))
             (_filter fn rest dst)))))
 
-(define filter (-> fn lst
-    (_filter fn lst (list))))
+; Takes a list and returns a new list where each item of the
+; source list has been evaluated by the passed function.
+;
+; fn: lst[i] -> any
+; lst: list
+; return: list
+(define map (-> fn lst
+    (_map fn lst (list))))
 
 (define _map (-> fn src dst
     (if (empty? src)
@@ -19,5 +35,3 @@
             (fn (head src))
             (_map fn (tail src) dst)))))
             
-(define map (-> fn lst
-    (_map fn lst (list))))
