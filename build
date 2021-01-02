@@ -1,6 +1,8 @@
 #!/bin/bash
 
-gcc -Wall -Wextra -o donkey \
+mkdir -p bin
+
+gcc -Wall -Wextra -o bin/donkey \
     src/main.c \
     src/list.c \
     src/tokenize.c \
