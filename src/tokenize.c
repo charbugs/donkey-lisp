@@ -47,6 +47,24 @@ List *tokenize(char* text) {
             list_push(tokens, token);
             text++;
         }
+        else if (isdigit(*text) || (*text == '-' && isdigit(*(text + 1)))) {
+            char *start = text;
+
+            while(isdigit(*(++text)))
+                ;
+
+            char *form = substring(start, text - start);
+
+            if (!is_valid_token_neighbor(*text)) {
+                printf("tokenizer: malformed token: %s%c\n", form, *text);
+                exit(1);
+            }
+
+            token = malloc(sizeof(Token));
+            token->type = TOK_INT;
+            token->val = form;
+            list_push(tokens, token);
+        }
         // Identifier token:
         else if (is_valid_identifier_start(*text)) {
             char *start = text;
@@ -87,24 +105,6 @@ List *tokenize(char* text) {
             token->val = form;
             list_push(tokens, token);
         } 
-        else if (isdigit(*text)) {
-            char *start = text;
-
-            while(isdigit(*(++text)))
-                ;
-
-            char *form = substring(start, text - start);
-
-            if (!is_valid_token_neighbor(*text)) {
-                printf("tokenizer: malformed token: %s%c\n", form, *text);
-                exit(1);
-            }
-
-            token = malloc(sizeof(Token));
-            token->type = TOK_INT;
-            token->val = form;
-            list_push(tokens, token);
-        }
         else if (is_valid_token_neighbor(*text)) {
             text++;
         }
