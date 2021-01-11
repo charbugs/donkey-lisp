@@ -2,23 +2,30 @@
 
 
 static char *list_to_string(List *items) {
-    int repr_bytes = 3;
-    char *repr = malloc(sizeof(char) * repr_bytes);
-    strcat(repr, "(");
+    Node *node;
+    
+    long size = items->length * 2 + 1;
+    for (int i = 0; i < items->length; i++) {
+        node = list_get(items, i);
+        size += strlen(node->val);
+        if (node->type == T_STR) {
+            size += 2;
+        }
+    }
+
+    char *repr = malloc(sizeof(char) * size);
+    strcpy(repr, "(");    
+
 
     for (int i = 0; i < items->length; i++) {
         Node *node = list_get(items, i);
         char *val = node->val;
 
         if (node->type == T_STR) {
-            repr_bytes += strlen(val) + 4;
-            repr = realloc(repr, repr_bytes);
             strcat(repr, "\"");
             strcat(repr, val);
             strcat(repr, "\"");
         } else {
-            repr_bytes += strlen(val) + 2;
-            repr = realloc(repr, repr_bytes);
             strcat(repr, val);
         }
 
