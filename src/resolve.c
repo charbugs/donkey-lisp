@@ -102,7 +102,7 @@ static Node *resolve_appl(Node *appl) {
     if (strcmp(func, "or") == 0) return buildin_or(args);
     if (strcmp(func, "empty?") == 0) return buildin_isempty(args);
     if (strcmp(func, "cons") == 0) return buildin_cons(args);
-    if (strcmp(func, "println") == 0) return buildin_println(args);
+    if (strcmp(func, "print") == 0) return buildin_print(args);
     if (strcmp(func, "printstack") == 0) return buildin_printstack(args);    
     if (strcmp(func, "->") == 0) return buildin_func(args);
 
