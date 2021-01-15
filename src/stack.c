@@ -9,22 +9,13 @@ static int count = 0;
 
 void stack_push(char* name, Node* node) {
     if (count >= MAX_STACK_ITEMS) {
-        printf("reached stack size limit\n");
+        printf("stack: reached stack size limit\n");
         exit(1);
     }
 
-    int type = node->type;
-    
-    if (type == T_INT || type == T_STR || T_APPL) {
-        stack[count].name = name;
-        stack[count].node = node;
-        count++;
-    } 
-    else {
-        printf("stack: only string and int values can be stored on stack, got %s",
-            type_to_string(type));
-        exit(1);
-    }
+    stack[count].name = name;
+    stack[count].node = node;
+    count++;
 }
 
 Node *stack_get(char *name) {

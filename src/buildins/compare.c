@@ -6,7 +6,7 @@
 // 2: >
 // 3: <=
 // 4: >=
-static Node *compare(int op, List *args) {
+static Node *compare(char* fname, int op, List *args) {
     args = resolve_all(args);
     int types[] = {
         T_INT | T_STR,
@@ -18,7 +18,7 @@ static Node *compare(int op, List *args) {
     int res;
 
     if (left->type != right->type) {
-        printf("compare: can only compare values of same type\n");
+        printf("function %s: can only compare values of same type\n", fname);
         exit(1);
     }
 
@@ -51,21 +51,21 @@ static Node *compare(int op, List *args) {
 }
 
 Node *buildin_eq(List *args) {
-    return compare(0, args);
+    return compare("=", 0, args);
 }
 
 Node *buildin_lt(List *args) {
-    return compare(1, args);
+    return compare("<", 1, args);
 }
 
 Node *buildin_gt(List *args) {
-    return compare(2, args);
+    return compare(">", 2, args);
 }
 
 Node *buildin_le(List *args) {
-    return compare(3, args);
+    return compare("<=", 3, args);
 }
 
 Node *buildin_ge(List *args) {
-    return compare(4, args);
+    return compare(">=", 4, args);
 }

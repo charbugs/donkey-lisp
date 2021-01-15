@@ -39,7 +39,7 @@ char *get_text(char *files[], int len) {
         f = fopen(files[i], "r");
         
         if (!f) {
-            printf("can not open file %s\n", files[i]);
+            printf("read: can not open file %s\n", files[i]);
             exit(1);
         }
 

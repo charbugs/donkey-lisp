@@ -65,7 +65,7 @@ List *tokenize(char* text) {
             char *form = substring(start, text - start);
 
             if (!is_valid_token_neighbor(*text)) {
-                printf("tokenizer: malformed token: %s%c\n", form, *text);
+                printf("tokenize: malformed token: %s%c\n", form, *text);
                 exit(1);
             }
 
@@ -84,7 +84,7 @@ List *tokenize(char* text) {
             char *form = substring(start, text - start);
 
             if (!is_valid_token_neighbor(*text)) {
-                printf("tokenizer: malformed token: %s%c\n", form, *text);
+                printf("tokenize: malformed token: %s%c\n", form, *text);
                 exit(1);
             }
 
@@ -135,7 +135,7 @@ List *tokenize(char* text) {
 
             text++;
             if (!is_valid_token_neighbor(*text)) {
-                printf("tokenizer: malformed token: \"%s\"%c\n", form, *text);
+                printf("tokenize: malformed token: \"%s\"%c\n", form, *text);
                 exit(1);
             }
 
@@ -148,7 +148,7 @@ List *tokenize(char* text) {
             text++;
         }
         else {
-            printf("tokenizer: non valid character: %c\n", *text);
+            printf("tokenize: non valid character: %c\n", *text);
             exit(1);
         }
     }

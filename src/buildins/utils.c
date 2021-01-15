@@ -14,23 +14,24 @@ int to_boolean(Node *node) {
         return 1;
     }
     else {
-        printf("can not evaluate value of type %d to boolean\n", node->type);
+        printf("can not evaluate value of type %s to boolean\n",
+            type_to_string(node->type));
         exit(1);
     }
 }
 
 void assert_arg_type(char* func, Node *arg, int pos, int valid_type) {
     if ((arg->type & valid_type) == 0) {
-        printf("assert args: expected typ<e %d for argument %d of function %s but got type %d\n",
-                valid_type, pos, func, arg->type);
+        printf("function %s: expected type %s for argument %d but got %s\n",
+                func, type_to_string(valid_type), pos, type_to_string(arg->type));
         exit(1);
     }
 }
 
 void assert_args_len(char* func, List *args, int len) {
     if (len != args->length) {
-        printf("assert args: expected %d arguments for function %s but got %d\n",
-            len, func, args->length);
+        printf("function %s: expected %d arguments but got %d\n",
+            func, len, args->length);
         exit(1);
     }
 }

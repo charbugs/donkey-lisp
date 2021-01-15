@@ -26,7 +26,7 @@ Node *buildin_func(List *args) {
     // get last arg
     cur = list_get(args, --i);
     if (!cur) {
-        printf("func: function body missing\n");
+        printf("function expression: function body missing\n");
         exit(1);
     }
 
@@ -35,15 +35,15 @@ Node *buildin_func(List *args) {
     if (cur && cur->type == T_APPL && strcmp(cur->val, "locals") == 0) {
 
         if (cur->children->length % 2 != 0) {
-            printf("func: number of arguments to the locals list must be even (pairs of key and value)\n");
+            printf("function expression: number of arguments to the locals list must be even (pairs of key and value)\n");
             exit(1);
         }
 
         for (int i = 0; i < cur->children->length; i +=2) {
             Node *key = list_get(cur->children, i);
             if (key->type != T_IDF) {
-                printf("expected an identifier at position %d in the locals list but got %d\n",
-                    i, key->type);
+                printf("function expression: expected an identifier at position %d in the locals list but got %s\n",
+                    i, type_to_string(key->type));
                 exit(1);
             }
         }
@@ -54,7 +54,7 @@ Node *buildin_func(List *args) {
 
     while ((cur = list_get(args, i--)) != NULL) {
         if (cur->type != T_IDF) {
-            printf("func: parameter list may only contain identifiers\n");
+            printf("function expression: parameter list may only contain identifiers\n");
             exit(1);
         }
     }

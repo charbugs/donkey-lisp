@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include "parse.h"
-
 
 Node *new_node(int type, char *val) {
     Node *node = malloc(sizeof(Node));
@@ -47,15 +47,15 @@ static int each_opening_bracket_is_followed_by_identifier(List *tokens) {
 
 static void check_token_syntax(List *tokens) {
     if (!is_wrapped_by_brackets(tokens)) {
-        printf("parser: start or end bracket missing\n");
+        printf("parse: start or end bracket missing\n");
         exit(1);
     }
     if (!has_matching_brackets(tokens)) {
-        printf("parser: opening and closing brackets do not match\n");
+        printf("parse: opening and closing brackets do not match\n");
         exit(1);
     }
     if (!each_opening_bracket_is_followed_by_identifier(tokens)) {
-        printf("parser: each opening bracket must be followed by an identifier\n");
+        printf("parse: each opening bracket must be followed by an identifier\n");
         exit(1);
     }
 }
@@ -118,15 +118,33 @@ void print_ast(Node *node) {
 }
 
 char* type_to_string(int type) {
-    switch(type) {
-        case 1: return "Root";
-        case 2: return "Int";
-        case 4: return "Str";
-        case 8: return "Ident";
-        case 16: return "Appl";
-        case 32: return "List";
-        case 64: return "Undefined";
-        case 128: return "Func";
-        default: return "Unknown";
+    struct TypeMap {
+        int type;
+        char *repr;
+    } typemap[8] = {
+        { 1, "Root" },
+        { 2, "Integer" },
+        { 4, "String" },
+        { 8, "Identifier" },
+        { 16, "Application" },
+        { 32, "List" },
+        { 64, "Undefined" },
+        { 128, "Function" }
+    };
+
+    int is_first_type = 1;
+    char *str = malloc(sizeof(char) * 100);
+    str[0] = '\0';
+
+    for (int i = 0; i < 8; i++) {
+        if ((type & typemap[i].type)) {
+            if (!is_first_type) {
+                strcat(str, "|");
+            }
+            strcat(str, typemap[i].repr);
+            is_first_type = 0;
+        }
     }
+
+    return str;
 }

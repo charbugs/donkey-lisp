@@ -14,7 +14,7 @@ static Node* call(char* fname, List *args) {
     int param_len = 0;
     
     if (func == NULL) {
-        printf("call: could not find function %s\n", fname);
+        printf("resolve: could not find function %s\n", fname);
         exit(1);
     }
 
@@ -28,7 +28,7 @@ static Node* call(char* fname, List *args) {
     }
 
     if (args->length != param_len) {
-        printf("call: expected %d arguments for function %s but got %d",
+        printf("resolve: expected %d arguments for function %s but got %d\n",
             param_len, fname, args->length);
         exit(1);
     }
@@ -112,7 +112,7 @@ static Node *resolve_appl(Node *appl) {
 static Node *resolve_idf(Node *idf) {
     Node *stack_item = stack_get(idf->val);
     if (stack_item == NULL) {
-        printf("resolve: could not find stack item %s\n", idf->val);
+        printf("resolve: could not find identifier %s on the stack\n", idf->val);
         exit(1);
     }
     return stack_item;

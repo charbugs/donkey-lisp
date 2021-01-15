@@ -15,7 +15,7 @@ Node *buildin_and(List *args) {
     Node *node;
 
     if (args->length < 1) {
-        printf("and: need at least one argument\n");
+        printf("function and: need at least one argument\n");
         exit(1);
     }
 
@@ -34,7 +34,7 @@ Node *buildin_or(List *args) {
     Node *node;
 
     if (args->length < 1) {
-        printf("or: need at least one argument\n");
+        printf("function or: need at least one argument\n");
         exit(1);
     }
 

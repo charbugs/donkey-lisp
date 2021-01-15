@@ -187,12 +187,13 @@ Node *buildin_cons(List *args) {
     }
     else { // right->type == T_STR
         if (left->type != T_STR) {
-            printf("cons: left must be string if right is a string, got:%d\n", left->type);
+            printf("function cons: left side must be of type string if the right side is a string, got: %s\n",
+                type_to_string(left->type));
             exit(1);
         }
 
         char* string = malloc(sizeof(char) * (strlen(left->val) + strlen(right->val) + 1));
-        strcat(string, left->val);
+        strcpy(string, left->val);
         strcat(string, right->val);
         return new_node(T_STR, string);
     }

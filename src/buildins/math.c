@@ -16,10 +16,10 @@ static char* itos(int i) {
 // 2: *
 // 3: /
 // 4: %
-static Node *calc(int op, List *args) {
+static Node *calc(char* fname, int op, List *args) {
     args = resolve_all(args);
     int types[] = { T_INT, T_INT };
-    assert_args("calc", args, 2, types);
+    assert_args(fname, args, 2, types);
     int val1 = argtoi(args, 0);
     int val2 = argtoi(args, 1);
     int res;
@@ -36,21 +36,21 @@ static Node *calc(int op, List *args) {
 }
 
 Node *buildin_add(List *args) {
-    return calc(0, args);
+    return calc("+", 0, args);
 }
 
 Node *buildin_sub(List *args) {
-    return calc(1, args);
+    return calc("-", 1, args);
 }
 
 Node *buildin_mul(List *args) {
-    return calc(2, args);
+    return calc("*", 2, args);
 }
 
 Node *buildin_div(List *args) {
-    return calc(3, args);
+    return calc("/", 3, args);
 }
 
 Node *buildin_mod(List *args) {
-    return calc(4, args);
+    return calc("mod", 4, args);
 }
