@@ -23,7 +23,7 @@ Node *buildin_if(List* args);
 // type check
 Node *buildin_isint(List *args);
 Node *buildin_isstr(List *args);
-Node *buildin_isundefined(List *args);
+Node *buildin_isnone(List *args);
 Node *buildin_islist(List *args);
 Node *buildin_isfunction(List *args);
 

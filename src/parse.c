@@ -128,7 +128,7 @@ char* type_to_string(int type) {
         { 8, "Identifier" },
         { 16, "Application" },
         { 32, "List" },
-        { 64, "Undefined" },
+        { 64, "None" },
         { 128, "Function" }
     };
 

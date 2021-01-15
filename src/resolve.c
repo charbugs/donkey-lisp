@@ -79,7 +79,7 @@ static Node *resolve_appl(Node *appl) {
     if (strcmp(func, "int?") == 0) return buildin_isint(args);
     if (strcmp(func, "str?") == 0) return buildin_isstr(args);
     if (strcmp(func, "list?") == 0) return buildin_islist(args);
-    if (strcmp(func, "undefined?") == 0) return buildin_isundefined(args);
+    if (strcmp(func, "none?") == 0) return buildin_isnone(args);
     if (strcmp(func, "function?") == 0) return buildin_isfunction(args);
     if (strcmp(func, "+") == 0) return buildin_add(args);
     if (strcmp(func, "-") == 0) return buildin_sub(args);
@@ -136,6 +136,7 @@ Node *resolve(Node *node) {
         case T_INT: return node;
         case T_STR: return node;
         case T_FUN: return node;
+        case T_NONE: return node;
         case T_IDF: return resolve_idf(node);
         case T_APPL: return resolve_appl(node);
         case T_ROOT: return resolve_root(node);

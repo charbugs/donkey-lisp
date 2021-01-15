@@ -53,11 +53,11 @@ Node *buildin_head(List *args) {
     
     if (list->type == T_LST) {
         Node *item = list_get(list->children, 0);
-        return item ? item : new_node(T_UND, "undefined");
+        return item ? item : new_node(T_NONE, "<None>");
     } 
     else { // T_STR
         if (strlen(list->val) == 0) {
-            return new_node(T_UND, "undefined");
+            return new_node(T_NONE, "<None>");
         } else {
             char* val = malloc(sizeof(char) * 2);
             strncpy(val, list->val, 1);
@@ -136,11 +136,11 @@ Node *buildin_last(List *args) {
 
     if (list->type == T_LST) {
         Node *item = list_last(list->children);
-        return item ? item : new_node(T_UND, "undefined");
+        return item ? item : new_node(T_NONE, "<None>");
     }
     else { // T_STR
         if (strlen(list->val) == 0) {
-            return new_node(T_UND, "undefined");
+            return new_node(T_NONE, "<None>");
         } else {
             char* val = malloc(sizeof(char) * 2);
             int off = strlen(list->val) - 1;
@@ -169,7 +169,7 @@ Node *buildin_isempty(List *args) {
 Node *buildin_cons(List *args) {
     args = resolve_all(args);
     int types[] = {
-        T_INT | T_STR | T_LST | T_UND | T_FUN,
+        T_INT | T_STR | T_LST | T_NONE | T_FUN,
         T_LST | T_STR
     };
     assert_args("cons", args, 2, types);
@@ -206,7 +206,7 @@ Node *buildin_append(List *args) {
     args = resolve_all(args);
     int types[] = {
         T_LST | T_STR,
-        T_INT | T_STR | T_LST | T_UND | T_FUN
+        T_INT | T_STR | T_LST | T_NONE | T_FUN
     };
     assert_args("append", args, 2, types);
     Node *left = list_get(args, 0);

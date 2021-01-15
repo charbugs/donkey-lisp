@@ -5,10 +5,10 @@ Node *buildin_define(List *args) {
     assert_args_len("define", args, 2);
     // the identifier node must not be resolved here
     Node *idf = list_get(args, 0);
-    assert_arg_type("const", idf, 1, T_IDF);
-    // so we resolve only the next argument to get the constant value
+    assert_arg_type("define", idf, 1, T_IDF);
+    // so we resolve only the next argument to get the value
     Node *object = resolve(list_get(args, 1));
-    assert_arg_type("const", object, 2, T_INT | T_STR | T_LST | T_FUN);
+    assert_arg_type("define", object, 2, T_INT | T_STR | T_LST | T_FUN | T_NONE );
 
     if (stack_get(idf->val) != NULL) {
         printf("define: overwriting constant values is not allowed: %s\n", idf->val);
@@ -16,7 +16,7 @@ Node *buildin_define(List *args) {
     }
 
     stack_push(idf->val, object);
-    return new_node(T_UND, "undefined");
+    return object;
 }
 
 Node *buildin_func(List *args) {
@@ -66,9 +66,9 @@ Node *buildin_func(List *args) {
 
 Node *buildin_if(List* args) {
     int types[] = {
-        T_INT | T_STR | T_IDF | T_APPL | T_UND | T_LST | T_FUN,
-        T_INT | T_STR | T_IDF | T_APPL | T_UND | T_LST | T_FUN,
-        T_INT | T_STR | T_IDF | T_APPL | T_UND | T_LST | T_FUN,
+        T_INT | T_STR | T_IDF | T_APPL | T_NONE | T_LST | T_FUN,
+        T_INT | T_STR | T_IDF | T_APPL | T_NONE | T_LST | T_FUN,
+        T_INT | T_STR | T_IDF | T_APPL | T_NONE | T_LST | T_FUN,
     };
     assert_args("if", args, 3, types);
     Node *condition = list_get(args, 0);

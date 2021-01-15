@@ -19,8 +19,8 @@ Node *buildin_islist(List *args) {
     return istype("list?", T_LST, args);
 }
 
-Node *buildin_isundefined(List *args) {
-    return istype("undefined?", T_UND, args);
+Node *buildin_isnone(List *args) {
+    return istype("none?", T_NONE, args);
 }
 
 Node *buildin_isfunction(List *args) {

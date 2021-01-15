@@ -7,7 +7,7 @@ int to_boolean(Node *node) {
     else if (node->type == T_STR) {
         return strlen(node->val) > 0;
     }
-    else if (node->type == T_UND) {
+    else if (node->type == T_NONE) {
         return 0;
     }
     else if (node->type == T_LST) {
