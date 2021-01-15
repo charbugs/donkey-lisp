@@ -59,16 +59,16 @@ Node *buildin_func(List *args) {
         }
     }
 
-    Node *func = new_node(T_FUN, "func");
+    Node *func = new_node(T_FUN, "<function>");
     func->children = args;
     return func;
 }
 
 Node *buildin_if(List* args) {
     int types[] = {
-        T_INT | T_STR | T_IDF | T_APPL | T_UND,
-        T_INT | T_STR | T_IDF | T_APPL | T_UND,
-        T_INT | T_STR | T_IDF | T_APPL | T_UND,
+        T_INT | T_STR | T_IDF | T_APPL | T_UND | T_LST | T_FUN,
+        T_INT | T_STR | T_IDF | T_APPL | T_UND | T_LST | T_FUN,
+        T_INT | T_STR | T_IDF | T_APPL | T_UND | T_LST | T_FUN,
     };
     assert_args("if", args, 3, types);
     Node *condition = list_get(args, 0);

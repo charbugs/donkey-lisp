@@ -1,24 +1,5 @@
 #include "buildins.h"
 
-int to_boolean(Node *node) {
-    if (node->type == T_INT) {
-        return atoi(node->val) != 0;
-    }
-    else if (node->type == T_STR) {
-        return strlen(node->val) > 0;
-    }
-    else if (node->type == T_UND) {
-        return 0;
-    }
-    else if (node->type == T_LST) {
-        return 1;
-    }
-    else {
-        printf("can not evaluate value of type %s to boolean\n",
-            type_to_string(node->type));
-        exit(1);
-    }
-}
 
 void assert_arg_type(char* func, Node *arg, int pos, int valid_type) {
     if ((arg->type & valid_type) == 0) {

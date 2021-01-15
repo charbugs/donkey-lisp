@@ -80,6 +80,7 @@ static Node *resolve_appl(Node *appl) {
     if (strcmp(func, "str?") == 0) return buildin_isstr(args);
     if (strcmp(func, "list?") == 0) return buildin_islist(args);
     if (strcmp(func, "undefined?") == 0) return buildin_isundefined(args);
+    if (strcmp(func, "function?") == 0) return buildin_isfunction(args);
     if (strcmp(func, "+") == 0) return buildin_add(args);
     if (strcmp(func, "-") == 0) return buildin_sub(args);
     if (strcmp(func, "*") == 0) return buildin_mul(args);

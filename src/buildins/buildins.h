@@ -25,6 +25,7 @@ Node *buildin_isint(List *args);
 Node *buildin_isstr(List *args);
 Node *buildin_isundefined(List *args);
 Node *buildin_islist(List *args);
+Node *buildin_isfunction(List *args);
 
 // math
 Node *buildin_add(List *args);

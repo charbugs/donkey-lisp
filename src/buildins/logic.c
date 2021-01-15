@@ -1,5 +1,27 @@
 #include "buildins.h"
 
+int to_boolean(Node *node) {
+    if (node->type == T_INT) {
+        return atoi(node->val) != 0;
+    }
+    else if (node->type == T_STR) {
+        return strlen(node->val) > 0;
+    }
+    else if (node->type == T_UND) {
+        return 0;
+    }
+    else if (node->type == T_LST) {
+        return 1;
+    }
+    else if (node->type == T_FUN) {
+        return 1;
+    }
+    else {
+        printf("can not evaluate value of type %s to boolean\n",
+            type_to_string(node->type));
+        exit(1);
+    }
+}
 
 Node *buildin_not(List *args) {
     args = resolve_all(args);
