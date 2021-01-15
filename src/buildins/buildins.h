@@ -37,6 +37,7 @@ Node *buildin_mod(List *args);
 Node *buildin_list(List *args);
 Node *buildin_isempty(List *args);
 Node *buildin_cons(List *args);
+Node *buildin_append(List *args);
 Node *buildin_head(List *args);
 Node *buildin_tail(List *args);
 Node *buildin_last(List *args);

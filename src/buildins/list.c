@@ -168,7 +168,10 @@ Node *buildin_isempty(List *args) {
 
 Node *buildin_cons(List *args) {
     args = resolve_all(args);
-    int types[] = { T_INT | T_STR | T_LST , T_LST | T_STR };
+    int types[] = {
+        T_INT | T_STR | T_LST | T_UND | T_FUN,
+        T_LST | T_STR
+    };
     assert_args("cons", args, 2, types);
     Node *left = list_get(args, 0);
     Node *right = list_get(args, 1);
@@ -188,6 +191,42 @@ Node *buildin_cons(List *args) {
     else { // right->type == T_STR
         if (left->type != T_STR) {
             printf("function cons: left side must be of type string if the right side is a string, got: %s\n",
+                type_to_string(left->type));
+            exit(1);
+        }
+
+        char* string = malloc(sizeof(char) * (strlen(left->val) + strlen(right->val) + 1));
+        strcpy(string, left->val);
+        strcat(string, right->val);
+        return new_node(T_STR, string);
+    }
+}
+
+Node *buildin_append(List *args) {
+    args = resolve_all(args);
+    int types[] = {
+        T_LST | T_STR,
+        T_INT | T_STR | T_LST | T_UND | T_FUN
+    };
+    assert_args("append", args, 2, types);
+    Node *left = list_get(args, 0);
+    Node *right = list_get(args, 1);
+    
+    if (left->type == T_LST) {
+        List *items = list_create();
+
+        for (int i = 0; i < left->children->length; i++) {
+            list_push(items, list_get(left->children, i));
+        }
+
+        list_push(items, right);
+        Node *list = new_node(T_LST, list_to_string(items));
+        list->children = items;
+        return list;
+    }
+    else { // left->type == T_STR
+        if (right->type != T_STR) {
+            printf("function append: right side must be of type string if the left side is a string, got: %s\n",
                 type_to_string(left->type));
             exit(1);
         }
