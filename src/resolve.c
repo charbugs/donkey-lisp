@@ -6,109 +6,45 @@
 #include "buildins/buildins.h"
 #include "stack.h"
 
-
-static Node* call(char* fname, List *args) {
-    args = resolve_all(args);
-    
-    Node *body, *locals, *param, *func = stack_get(fname); // T_FUN
-    int param_len = 0;
-    
-    if (func == NULL) {
-        printf("resolve: could not find function %s\n", fname);
-        exit(1);
-    }
-
-    for (int i = 0; i < func->children->length - 1; i++) {
-        param = list_get(func->children, i);
-        if (param->type != T_IDF) {
-            break;
-        } else {
-            param_len++;
-        }
-    }
-
-    if (args->length != param_len) {
-        printf("resolve: expected %d arguments for function %s but got %d\n",
-            param_len, fname, args->length);
-        exit(1);
-    }
-
-    for (int i = 0; i < param_len; i++) {
-        char* name = ((Node*)list_get(func->children, i))->val;
-        Node* object = list_get(args, i);
-        stack_push(name, object);
-    }
-    
-    if (list_get(func->children, param_len + 1) == NULL) {
-        locals = NULL;
-        body = list_get(func->children, param_len);
-    } else {
-        locals = list_get(func->children, param_len);
-        body = list_get(func->children, param_len + 1);
-    }
-
-    if (locals) {
-        for (int i = 0; i < locals->children->length; i += 2) {
-            char* name = ((Node*)list_get(locals->children, i))->val;
-            Node* object = resolve(list_get(locals->children, i + 1));
-            stack_push(name, object);
-        }
-    }
-
-    Node *ret = resolve(body);
-
-    if (locals) {
-        for (int i = 0; i < locals->children->length; i += 2) {
-            stack_pop();
-        } 
-    }
-
-    for (int i = 0; i < param_len; i++) {
-        stack_pop();
-    }
-
-    return ret;
-}
-
 static Node *resolve_appl(Node *appl) {
-    char *func = appl->val;
+    char *fname = appl->val;
     List *args = appl->children;
 
     // TODO: lookup table that maps function names to ints 
     // so that we can avoid that many strcmps
-    if (strcmp(func, "int?") == 0) return buildin_isint(args);
-    if (strcmp(func, "str?") == 0) return buildin_isstr(args);
-    if (strcmp(func, "list?") == 0) return buildin_islist(args);
-    if (strcmp(func, "none?") == 0) return buildin_isnone(args);
-    if (strcmp(func, "function?") == 0) return buildin_isfunction(args);
-    if (strcmp(func, "+") == 0) return buildin_add(args);
-    if (strcmp(func, "-") == 0) return buildin_sub(args);
-    if (strcmp(func, "*") == 0) return buildin_mul(args);
-    if (strcmp(func, "/") == 0) return buildin_div(args);
-    if (strcmp(func, "mod") == 0) return buildin_mod(args);
-    if (strcmp(func, "define") == 0) return buildin_define(args);
-    if (strcmp(func, "if") == 0) return buildin_if(args);    
-    if (strcmp(func, "list") == 0) return buildin_list(args);
-    if (strcmp(func, "head") == 0) return buildin_head(args);
-    if (strcmp(func, "tail") == 0) return buildin_tail(args);
-    if (strcmp(func, "last") == 0) return buildin_last(args);
-    if (strcmp(func, "init") == 0) return buildin_init(args);
-    if (strcmp(func, "=") == 0) return buildin_eq(args);
-    if (strcmp(func, "<") == 0) return buildin_lt(args);
-    if (strcmp(func, ">") == 0) return buildin_gt(args);
-    if (strcmp(func, "<=") == 0) return buildin_le(args);
-    if (strcmp(func, ">=") == 0) return buildin_ge(args);
-    if (strcmp(func, "not") == 0) return buildin_not(args);
-    if (strcmp(func, "and") == 0) return buildin_and(args);
-    if (strcmp(func, "or") == 0) return buildin_or(args);
-    if (strcmp(func, "empty?") == 0) return buildin_isempty(args);
-    if (strcmp(func, "cons") == 0) return buildin_cons(args);
-    if (strcmp(func, "append") == 0) return buildin_append(args);
-    if (strcmp(func, "print") == 0) return buildin_print(args);
-    if (strcmp(func, "printstack") == 0) return buildin_printstack(args);    
-    if (strcmp(func, "->") == 0) return buildin_func(args);
+    if (strcmp(fname, "int?") == 0) return buildin_isint(args);
+    if (strcmp(fname, "str?") == 0) return buildin_isstr(args);
+    if (strcmp(fname, "list?") == 0) return buildin_islist(args);
+    if (strcmp(fname, "none?") == 0) return buildin_isnone(args);
+    if (strcmp(fname, "function?") == 0) return buildin_isfunction(args);
+    if (strcmp(fname, "+") == 0) return buildin_add(args);
+    if (strcmp(fname, "-") == 0) return buildin_sub(args);
+    if (strcmp(fname, "*") == 0) return buildin_mul(args);
+    if (strcmp(fname, "/") == 0) return buildin_div(args);
+    if (strcmp(fname, "mod") == 0) return buildin_mod(args);
+    if (strcmp(fname, "define") == 0) return buildin_define(args);
+    if (strcmp(fname, "if") == 0) return buildin_if(args);    
+    if (strcmp(fname, "list") == 0) return buildin_list(args);
+    if (strcmp(fname, "head") == 0) return buildin_head(args);
+    if (strcmp(fname, "tail") == 0) return buildin_tail(args);
+    if (strcmp(fname, "last") == 0) return buildin_last(args);
+    if (strcmp(fname, "init") == 0) return buildin_init(args);
+    if (strcmp(fname, "=") == 0) return buildin_eq(args);
+    if (strcmp(fname, "<") == 0) return buildin_lt(args);
+    if (strcmp(fname, ">") == 0) return buildin_gt(args);
+    if (strcmp(fname, "<=") == 0) return buildin_le(args);
+    if (strcmp(fname, ">=") == 0) return buildin_ge(args);
+    if (strcmp(fname, "not") == 0) return buildin_not(args);
+    if (strcmp(fname, "and") == 0) return buildin_and(args);
+    if (strcmp(fname, "or") == 0) return buildin_or(args);
+    if (strcmp(fname, "empty?") == 0) return buildin_isempty(args);
+    if (strcmp(fname, "cons") == 0) return buildin_cons(args);
+    if (strcmp(fname, "append") == 0) return buildin_append(args);
+    if (strcmp(fname, "print") == 0) return buildin_print(args);
+    if (strcmp(fname, "printstack") == 0) return buildin_printstack(args);    
+    if (strcmp(fname, "->") == 0) return buildin_func(args);
 
-    return call(func, args);
+    return buildin_call(fname, args);
 }
 
 static Node *resolve_idf(Node *idf) {

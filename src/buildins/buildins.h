@@ -19,6 +19,7 @@ void assert_args(char *func, List* args, int len, int valid_types[]);
 Node *buildin_define(List *args);
 Node *buildin_func(List *args);
 Node *buildin_if(List* args);
+Node *buildin_call(char *fname, List* args);
 
 // type check
 Node *buildin_isint(List *args);

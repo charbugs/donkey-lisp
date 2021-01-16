@@ -81,3 +81,85 @@ Node *buildin_if(List* args) {
         return resolve(false_node);
     }
 }
+
+Node* buildin_call(char* fname, List *args) {
+    args = resolve_all(args);
+    
+    Node *func, *param, *body, *locals;
+    List *fargs; 
+    int param_len = 0;
+
+    if (strcmp(fname, "call") == 0) {
+      func = list_get(args, 0);
+      if (!func || func->type != T_FUN) {
+        printf("function call: first argument must be a function\n");
+        exit(1);
+      }
+
+      fname = "Anonymous";
+      fargs = list_create();
+      for (int i = 1; i < args->length; i++) {
+        list_push(fargs, list_get(args, i));
+      }
+    } 
+    else {
+      func = stack_get(fname);
+      if (!func || func->type != T_FUN) {
+          printf("function call: could not find a function with the name %s\n", fname);
+          exit(1);
+      }
+
+      fargs = args;
+    }
+
+    for (int i = 0; i < func->children->length - 1; i++) {
+        param = list_get(func->children, i);
+        if (param->type != T_IDF) {
+            break;
+        } else {
+            param_len++;
+        }
+    }
+
+    if (fargs->length != param_len) {
+        printf("resolve: expected %d argument(s) for function %s but got %d\n",
+            param_len, fname, fargs->length);
+        exit(1);
+    }
+
+    for (int i = 0; i < param_len; i++) {
+        char* name = ((Node*)list_get(func->children, i))->val;
+        Node* object = list_get(fargs, i);
+        stack_push(name, object);
+    }
+    
+    if (list_get(func->children, param_len + 1) == NULL) {
+        locals = NULL;
+        body = list_get(func->children, param_len);
+    } else {
+        locals = list_get(func->children, param_len);
+        body = list_get(func->children, param_len + 1);
+    }
+
+    if (locals) {
+        for (int i = 0; i < locals->children->length; i += 2) {
+            char* name = ((Node*)list_get(locals->children, i))->val;
+            Node* object = resolve(list_get(locals->children, i + 1));
+            stack_push(name, object);
+        }
+    }
+
+    Node *ret = resolve(body);
+
+    if (locals) {
+        for (int i = 0; i < locals->children->length; i += 2) {
+            stack_pop();
+        } 
+    }
+
+    for (int i = 0; i < param_len; i++) {
+        stack_pop();
+    }
+
+    return ret;
+}
