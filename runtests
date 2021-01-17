@@ -1,0 +1,5 @@
+#!/bin/bash
+
+./bin/donkey \
+    test/testutils.dl \
+    test/buildins/*

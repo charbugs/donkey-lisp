@@ -1,0 +1,4 @@
+
+(define run-test (-> name test
+    (print (if (test) "passed" "FAILED")
+        ": " name "\n")))

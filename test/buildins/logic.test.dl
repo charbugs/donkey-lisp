@@ -1,0 +1,31 @@
+
+(print "----------------------------------------\n")
+(print "test build-in logic functions\n")
+(print "----------------------------------------\n")
+
+(run-test "not 3 is 0" (->
+    (= 0 (not 3))))
+
+(run-test "not -3 is 0" (->
+    (= 0 (not -3))))
+
+(run-test "not 0 is 1" (->
+    (= 1 (not 0))))
+
+(run-test "not \"hello\" is 0" (->
+    (= 0 (not "hello"))))
+
+(run-test "not \"\" is 1" (->
+    (= 1 (not ""))))
+
+(run-test "not (list 1 2) is 0" (->
+    (= 0 (not (list 1 2)))))
+
+(run-test "not (list) is 0 (the empty list evaluates to true too)" (->
+    (= 0 (not (list 1 2)))))
+
+(run-test "not <None> is 1" (->
+    (= 1 (not (print))))) ; print without any argument returns None
+
+(run-test "not <Function> is 0 (function always evaluates to true)" (->
+    (= 0 (not (-> 23)))))
