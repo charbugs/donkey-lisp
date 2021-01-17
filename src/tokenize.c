@@ -30,6 +30,7 @@ static char esc_seq_to_ascii(char c) {
     switch (c) {
         case 'n': return '\n'; break;
         case 't': return '\t'; break;
+        case '\"': return '\"'; break;
         case '\\': return '\\'; break;
         default: return c; break;
     }
@@ -96,16 +97,20 @@ List *tokenize(char* text) {
         // String token:
         // Any character between "" is considered a string.
         else if (*text == '"') {
-            char *start = (text + 1);
+            char *start = ++text;
             int esc_len = 0; // length of escape sequences
             
             // Forward the text until we get a closing quote
             // and count the escape sequences by counting the backslashes.
             // But dont count the backslash if the previous char is a backslash.
-            while(*(++text) != '"') {
+            while(1) {
+                if (*text == '"' && *(text - 1) != '\\') {
+                    break;
+                }
                 if (*text == '\\' && *(text - 1) != '\\') {
                     esc_len++;
                 }
+                text++;
             }
 
             // The string that we are going to extract will be as long
