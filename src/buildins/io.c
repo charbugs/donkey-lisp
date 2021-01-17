@@ -3,9 +3,15 @@
 
 Node *buildin_print(List *args) {
     args = resolve_all(args);
-    int types[] = { T_STR | T_INT | T_LST | T_APPL | T_NONE | T_FUN };
-    assert_args("println", args, 1, types);
-    Node *node = list_get(args, 0);
-    printf("%s\n", node->val);
-    return node;
+    Node *cur;
+    int type = T_STR | T_INT | T_LST | T_APPL | T_NONE | T_FUN;
+    
+    for (int i = 0; i < args->length; i++) {
+        cur = list_get(args, i);
+        assert_arg_type("print", cur, i, type);
+        printf("%s", cur->val);
+    }
+
+    cur = list_get(args, 0);
+    return cur ? cur : new_node(T_NONE, "<None>");
 }
