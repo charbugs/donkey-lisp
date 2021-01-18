@@ -1,0 +1,33 @@
+(print "----------------------------------------\n")
+(print "test buildin type check functions\n")
+(print "----------------------------------------\n")
+
+(run-test "(int? 3) returns 1" (->
+    (= 1 (int? 3))))
+
+(run-test "(int? \"hello\")  returns 0" (->
+    (= 0 (int? "hello"))))
+
+(run-test "(str? \"hello\") returns 1" (->
+    (= 1 (str? "hello"))))
+
+(run-test "(str? 3) returns 0" (->
+    (= 0 (str? 3))))
+
+(run-test "(list? (list)) returns 1" (->
+    (= 1 (list? (list)))))
+
+(run-test "(list? 3) returns 0" (->
+    (= 0 (list? 3))))
+
+(run-test "(none? (print)) returns 1" (->
+    (= 1 (none? (print)))))
+
+(run-test "(none? 3) returns 0" (->
+    (= 0 (none? 3))))
+
+(run-test "(function? <Function>) returns 1" (->
+    (= 1 (function? (-> 42)))))
+
+(run-test "(function? 3) returns 0" (->
+    (= 0 (function? 3))))
