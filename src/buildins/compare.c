@@ -9,17 +9,16 @@
 static Node *compare(char* fname, int op, List *args) {
     args = resolve_all(args);
     int types[] = {
-        T_INT | T_STR,
-        T_INT | T_STR,
+        T_INT | T_STR | T_FUN,
+        T_INT | T_STR | T_FUN,
     };
-    assert_args("compare", args, 2, types);
+    assert_args(fname, args, 2, types);
     Node *left = list_get(args, 0);
     Node *right = list_get(args, 1);
     int res;
 
     if (left->type != right->type) {
-        printf("function %s: can only compare values of same type\n", fname);
-        exit(1);
+        return new_node(T_INT, "0");
     }
 
     if (left->type == T_INT) {
@@ -35,13 +34,22 @@ static Node *compare(char* fname, int op, List *args) {
 
         }
     }
-    else { // T_STR
+    else if (left->type == T_STR) {
         switch (op) {
             case 0: res = strcmp(left->val, right->val) == 0; break;
             case 1: res = strcmp(left->val, right->val) < 0; break;
             case 2: res = strcmp(left->val, right->val) > 0; break;
             case 3: res = strcmp(left->val, right->val) <= 0; break;
             case 4: res = strcmp(left->val, right->val) >= 0; break;
+        }
+    } 
+    else { // T_FUN
+        switch(op) {
+            case 0:
+            case 3:
+            case 4: res = left == right; break;
+            case 1:
+            case 2: res = 0;
         }
     }
 
