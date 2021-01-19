@@ -1,0 +1,23 @@
+
+; compares two lists for deep equality
+; left: list
+; right: list
+; return: 0/1
+(define equal? (-> left right
+    (locals 
+        ; how much list are empty: 0, 1 or 2?
+        empties (+ (empty? left) (empty? right))
+        lhead (head left)
+        rhead (head right)
+        ; how much of the items are lists: 0, 1 or 2?
+        nlists (+ (list? lhead) (list? rhead))) 
+    (if (= empties 2) 1 ; if both are empty return 1
+        (if (= empties 1) 0 ; if only one is empty return 0
+            (if (= 1 nlists) 0 ; of only one item is a list return 0
+                (if (= 2 nlists) ; if both items are list
+                    (if (equal? lhead rhead)
+                        (equal? (tail left) (tail right))
+                        0)
+                    (if (= lhead rhead)
+                        (equal? (tail left) (tail right))
+                        0)))))))

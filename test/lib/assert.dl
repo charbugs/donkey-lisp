@@ -1,0 +1,79 @@
+(run-test "equal?-1" (-> (= 1 (equal?
+    (list)
+    (list)))))
+
+(run-test "equal?-2" (-> (= 0 (equal?
+    (list 1)
+    (list)))))
+
+(run-test "equal?-3" (-> (= 1 (equal?
+    (list 1)
+    (list 1)))))
+
+(run-test "equal?-4" (-> (= 0 (equal?
+    (list 1 2)
+    (list 1)))))
+
+(run-test "equal?-5" (-> (= 1 (equal?
+    (list 1 2 3)
+    (list 1 2 3)))))
+
+(run-test "equal?-6" (-> (= 0 (equal?
+    (list "foo")
+    (list)))))
+
+(run-test "equal?-7" (-> (= 1 (equal?
+    (list "foo")
+    (list "foo")))))
+
+(run-test "equal?-8" (-> (= 1 (equal?
+    (list "foo" 1 2)
+    (list "foo" 1 2)))))
+
+(run-test "equal?-9" (-> (= 0 (equal?
+    (list (list))
+    (list 1)))))
+
+(run-test "equal?-10" (-> (= 1 (equal?
+    (list (list))
+    (list (list))))))
+
+(run-test "equal?-11" (-> (= 0 (equal?
+    (list (list 5))
+    (list (list))))))
+
+(run-test "equal?-12" (-> (= 1 (equal?
+    (list (list 5))
+    (list (list 5))))))
+
+(run-test "equal?-13" (-> (= 1 (equal?
+    (list 
+        (list 5)
+        (list)
+        "foo"
+        23 
+        (list 7 8 
+            (list 9)))
+    (list 
+        (list 5)
+        (list)
+        "foo"
+        23 
+        (list 7 8 
+            (list 9)))))))
+
+(run-test "equal?-13" (-> (= 0 (equal?
+    (list 
+        (list 5)
+        (list)
+        "foo"
+        23 
+        (list 7 8 
+            (list 9)))
+    (list 
+        (list 5)
+        (list)
+        "foo"
+        23 
+        (list 7 
+            (list 9)))))))
