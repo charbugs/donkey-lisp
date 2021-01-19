@@ -50,3 +50,15 @@
             (-> x (list x))
             (list 1 2))
         (list (list 1) (list 2)))))
+
+(run-test "reduce-1" (->
+    (= 10 (reduce
+            (-> acc x (+ acc x))
+            (list 1 2 3 4)
+            0))))
+
+(run-test "reduce-1" (->
+    (= 42 (reduce
+            (-> acc x (+ acc x))
+            (list)
+            42))))

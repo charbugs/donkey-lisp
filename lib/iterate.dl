@@ -34,4 +34,14 @@
         (cons
             (fn (head src))
             (_map fn (tail src) dst)))))
-            
+
+; fn: acc, lst[i] -> any
+; lst: list
+; acc: any - start value
+; return: list
+(define reduce (-> fn lst acc
+    (if (empty? lst)
+        acc
+        (fn
+            (reduce fn (init lst) acc)
+            (last lst)))))
