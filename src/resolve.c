@@ -41,7 +41,8 @@ static Node *resolve_appl(Node *appl) {
     if (strcmp(fname, "cons") == 0) return buildin_cons(args);
     if (strcmp(fname, "append") == 0) return buildin_append(args);
     if (strcmp(fname, "print") == 0) return buildin_print(args);
-    if (strcmp(fname, "printstack") == 0) return buildin_printstack(args);    
+    if (strcmp(fname, "printstack") == 0) return buildin_printstack(args);
+    if (strcmp(fname, "none") == 0) return buildin_none();
     if (strcmp(fname, "->") == 0) return buildin_func(args);
 
     return buildin_call(fname, args);

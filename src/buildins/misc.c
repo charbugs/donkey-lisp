@@ -82,6 +82,10 @@ Node *buildin_if(List* args) {
     }
 }
 
+Node *buildin_none() {
+  return new_node(T_NONE, "<None>");
+}
+
 Node* buildin_call(char* fname, List *args) {
     args = resolve_all(args);
     
