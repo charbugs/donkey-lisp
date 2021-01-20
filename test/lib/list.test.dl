@@ -1,0 +1,27 @@
+(print "----------------------------------------\n")
+(print "test list.dl\n")
+(print "----------------------------------------\n")
+
+(run-test "(len (list)) return 0" (->
+    (= 0 (len (list)))))
+
+(run-test "(len (list 1)) return 1" (->
+    (= 1 (len (list 1)))))
+
+(run-test "(len (list 1 2)) return 2" (->
+    (= 2 (len (list 1 2)))))
+
+(run-test "(get (list) 0) return <None>" (->
+  (none? (get (list) 0))))
+
+(run-test "(get (list 6 7 8) 0) return 6" (->
+  (= 6 (get (list 6 7 8) 0))))
+
+(run-test "(get (list 6 7 8) 1) return 7" (->
+  (= 7 (get (list 6 7 8) 1))))
+
+(run-test "(get (list 6 7 8) 3) return <None>" (->
+  (none? (get (list 6 7 8) 3))))
+
+(run-test "(get (list 6 7 8) -1) return <None>" (->
+  (none? (get (list 6 7 8) -1))))

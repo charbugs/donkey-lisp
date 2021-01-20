@@ -1,0 +1,10 @@
+
+; returns length of list
+(define len (-> lst
+    (reduce (-> acc x (+ acc 1)) lst 0)))
+
+; returns element of list by index
+(define get (-> lst idx
+    (if (< idx 0) (none)
+        (if (= idx 0) (head lst)
+            (get (tail lst) (- idx 1))))))
