@@ -11,6 +11,10 @@
 (run-test "(list (list 1 2)) returns a list" (->
     (list? (list (list 1 2)))))
 
+;
+; head on lists
+;
+
 (run-test "(head (list 4 5 6)) returns 4" (->
     (= 4 (head (list 4 5 6)))))
 
@@ -19,6 +23,23 @@
 
 (run-test "(head (list)) returns <None>" (->
     (none? (head (list)))))
+
+;
+; head on strings
+;
+
+(run-test "(head \"foo\") return \"f\"" (->
+  (= "f" (head "foo"))))
+
+(run-test "(head \"f\") return \"f\"" (->
+  (= "f" (head "f"))))
+
+(run-test "(head \"\") return <None>" (->
+  (none? (head ""))))
+
+;
+; tail on lists
+;
 
 (run-test "(tail (list 4 5 6)) returns (list 5 6)" (->
     (locals xs (list 4 5 6))
@@ -33,6 +54,23 @@
 (run-test "(tail (list)) returns ()" (->
     (none? (head (tail (list))))))
 
+;
+; tail on strings
+;
+
+(run-test "(tail \"foo\") return \"oo\"" (->
+  (= "oo" (tail "foo"))))
+
+(run-test "(tail \"f\") return \"\"" (->
+  (= "" (tail "f"))))
+
+(run-test "(tail \"\") return \"\"" (->
+  (= "" (tail ""))))
+
+;
+; last on lists
+;
+
 (run-test "(last (list 4 5 6)) returns 6" (->
     (= 6 (last (list 4 5 6)))))
 
@@ -41,6 +79,23 @@
 
 (run-test "(last (list)) returns <None>" (->
     (none? (last (list)))))
+
+;
+; last on strings
+;
+
+(run-test "(last \"bar\") return \"r\"" (->
+  (= "r" (last "bar"))))
+
+(run-test "(last \"f\") return \"f\"" (->
+  (= "f" (last "f"))))
+
+(run-test "(last \"\") return <None>" (->
+  (none? (last ""))))
+
+;
+; init on lists
+;
 
 (run-test "(init (list 4 5 6)) returns (4 5)" (->
     (locals xs (list 4 5 6))
@@ -55,11 +110,42 @@
 (run-test "(init (list)) returns ()" (->
     (none? (last (init (list))))))
 
+;
+; init on strings
+;
+
+(run-test "(init \"bar\") returns \"ba\"" (->
+  (= "ba" (init "bar"))))
+
+(run-test "(init \"f\") returns \"\"" (->
+  (= "" (init "f"))))
+
+(run-test "(init \"\") returns \"\"" (->
+  (= "" (init ""))))
+
+;
+; empty? on lists
+;
+
 (run-test "(empty? (list)) returns 1" (->
     (empty? (list))))
 
 (run-test "(empty? (list 5)) returns 0" (->
     (= 0 (empty? (list 5)))))
+
+;
+; empty? on string
+;
+
+(run-test "(empty? \"\") returns 1" (->
+  (empty? "")))
+
+(run-test "(empty? \"foo\") returns 0" (->
+  (= 0 (empty? "foo"))))
+
+;
+; cons on lists
+;
 
 (run-test "(cons 5 (list)) returns (5)" (->
     (and
@@ -71,6 +157,20 @@
         (= 5 (head (cons 5 (list 4))))
         (= 4 (head (tail (cons 5 (list 4))))))))
 
+;
+; const on strings
+;
+
+(run-test "(cons \"foo\" \"\") return \"foo\"" (->
+  (= "foo" (cons "foo" ""))))
+
+(run-test "(cons \"f\" \"oo\") return \"foo\"" (->
+  (= "foo" (cons "f" "oo"))))
+
+;
+; append on lists
+;
+
 (run-test "(append (list) 5) returns (5)" (->
     (and
         (= 5 (head (append (list) 5)))
@@ -81,7 +181,14 @@
         (= 4 (head (append (list 4) 5)))
         (= 5 (head (tail (append (list 4) 5)))))))
 
+;
+; append on strings
+;
 
+(run-test "(append \"b\" \"ar\") return \"bar\"" (->
+  (= "bar" (append "b" "ar"))))
 
+(run-test "(append \"\" \"bar\") return \"bar\"" (->
+  (= "bar" (append "" "bar"))))
 
 

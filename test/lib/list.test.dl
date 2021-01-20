@@ -2,26 +2,41 @@
 (print "test list.dl\n")
 (print "----------------------------------------\n")
 
-(run-test "(len (list)) return 0" (->
+(run-test "(len (list)) returns 0" (->
     (= 0 (len (list)))))
 
-(run-test "(len (list 1)) return 1" (->
+(run-test "(len (list 1)) returns 1" (->
     (= 1 (len (list 1)))))
 
-(run-test "(len (list 1 2)) return 2" (->
+(run-test "(len (list 1 2)) returns 2" (->
     (= 2 (len (list 1 2)))))
 
-(run-test "(get (list) 0) return <None>" (->
+(run-test "(len \"\") returns 0" (->
+  (= 0 (len ""))))
+
+(run-test "(len \"b\") returns 1" (->
+  (= 1 (len "b"))))
+
+(run-test "(len \"bar\") returns 3" (->
+  (= 3 (len "bar"))))
+
+(run-test "(get (list) 0) returns <None>" (->
   (none? (get (list) 0))))
 
-(run-test "(get (list 6 7 8) 0) return 6" (->
+(run-test "(get (list 6 7 8) 0) returns 6" (->
   (= 6 (get (list 6 7 8) 0))))
 
-(run-test "(get (list 6 7 8) 1) return 7" (->
+(run-test "(get (list 6 7 8) 1) returns 7" (->
   (= 7 (get (list 6 7 8) 1))))
 
-(run-test "(get (list 6 7 8) 3) return <None>" (->
+(run-test "(get (list 6 7 8) 3) returns <None>" (->
   (none? (get (list 6 7 8) 3))))
 
-(run-test "(get (list 6 7 8) -1) return <None>" (->
+(run-test "(get (list 6 7 8) -1) returns <None>" (->
   (none? (get (list 6 7 8) -1))))
+
+(run-test "(get \"bar\" 0) return \"b\"" (->
+  (= "b" (get "bar" 0))))
+
+(run-test "(get \"bar\" 2) return \"r\"" (->
+  (= "r" (get "bar" 2))))
