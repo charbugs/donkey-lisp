@@ -9,8 +9,8 @@
 static Node *compare(char* fname, int op, List *args) {
     args = resolve_all(args);
     int types[] = {
-        T_INT | T_STR | T_FUN,
-        T_INT | T_STR | T_FUN,
+        T_INT | T_STR | T_FUN | T_NONE,
+        T_INT | T_STR | T_FUN | T_NONE,
     };
     assert_args(fname, args, 2, types);
     Node *left = list_get(args, 0);
@@ -43,7 +43,7 @@ static Node *compare(char* fname, int op, List *args) {
             case 4: res = strcmp(left->val, right->val) >= 0; break;
         }
     } 
-    else { // T_FUN
+    else if (left->type == T_FUN) {
         switch(op) {
             case 0:
             case 3:
@@ -51,6 +51,9 @@ static Node *compare(char* fname, int op, List *args) {
             case 1:
             case 2: res = 0;
         }
+    } 
+    else { // T_NONE
+      res = 1;
     }
 
     return res
