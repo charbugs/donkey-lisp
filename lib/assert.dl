@@ -1,9 +1,15 @@
 
-; compares two lists for deep equality
-; left: list
-; right: list
-; return: 0/1
+; Extends `=` to accept lists.
+; If two lists are given check for deep equality.
 (define equal? (-> left right
+    (locals nlists (+ (list? left) (list? right)))
+    (if (= nlists 1) 0
+        (if (= nlists 0)
+            (= left right)
+            (_equal-lists? left right)))))
+
+; left and right must be lists
+(define _equal-lists? (-> left right
     (locals 
         ; how much list are empty: 0, 1 or 2?
         empties (+ (empty? left) (empty? right))

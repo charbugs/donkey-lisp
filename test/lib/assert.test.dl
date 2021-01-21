@@ -81,3 +81,26 @@
         23 
         (list 7 
             (list 9)))))))
+
+;
+; none-list values
+;
+
+(run-test "equal?-14" (->
+  (= 0 (equal? 1 (list)))))
+
+(run-test "equal?-15" (->
+  (= 0 (equal? "foo" (list)))))
+
+(run-test "equal?-16" (->
+  (= 0 (equal? (-> 42) (list)))))
+
+(run-test "equal?-17" (->
+  (= 1 (equal? 5 5))))
+
+(run-test "equal?-18" (->
+  (= 1 (equal? "foo" "foo"))))
+
+(define _test_19_fn (-> 42))
+(run-test "equal?-19" (->
+  (= 1 (equal? _test_19_fn _test_19_fn ))))
