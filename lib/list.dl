@@ -8,3 +8,11 @@
     (if (< idx 0) (none)
         (if (= idx 0) (head lst)
             (get (tail lst) (- idx 1))))))
+
+; returns the index of the first occurence of element in list
+; -1 if nothing was found
+(define find (-> lst elem (_find lst elem 0)))
+(define _find (-> lst elem idx
+    (if (empty? lst) -1
+        (if (= (head lst) elem) idx
+            (_find (tail lst) elem (+ idx 1))))))

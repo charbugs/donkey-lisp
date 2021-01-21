@@ -40,3 +40,27 @@
 
 (run-test "(get \"bar\" 2) return \"r\"" (->
   (= "r" (get "bar" 2))))
+
+(run-test "(find (list) 7) return -1" (->
+  (= -1 (find (list) 7))))
+
+(run-test "(find (list 3 4 5) 7) return -1" (->
+  (= -1 (find (list 3 4 5) 7))))
+
+(run-test "(find (list 3 4 5) 3) return 0" (->
+  (= 0 (find (list 3 4 5) 3))))
+
+(run-test "(find (list 3 4 5) 5) return 2" (->
+  (= 2 (find (list 3 4 5) 5))))
+
+(run-test "(find (list 3 \"foo\" 5) \"foo\") return 1" (->
+  (= 1 (find (list 3 "foo" 5) "foo"))))
+
+(run-test "(find \"foo\" \"b\") returns -1" (->
+  (= -1 (find "foo" "b"))))
+
+(run-test "(find \"foo\" \"f\") returns 0" (->
+  (= 0 (find "foo" "f"))))
+
+(run-test "(find \"foo\" \"o\") returns 1" (->
+  (= 1 (find "foo" "o"))))
