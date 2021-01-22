@@ -2,63 +2,81 @@
 (print "test lib/iterate.dl\n")
 (print "----------------------------------------\n")
 
-(run-test "filter-1" (->
+(run-test "filter number list" (->
     (equal?
         (filter
             (-> x (> x 5))
             (list 3 4 5 6 7 8))
         (list 6 7 8))))
 
-(run-test "filter-2" (->
+(run-test "filter number list with single number" (->
     (equal?
         (filter
             (-> x (> x 5))
             (list 2))
         (list))))
 
-(run-test "filter-3" (->
+(run-test "filter empty list" (->
     (equal?
         (filter
             (-> x (> x 5))
             (list))
         (list))))
 
-(run-test "filter-4" (->
+(run-test "filter list for strings" (->
     (equal?
         (filter
             (-> x (str? x))
             (list 2 (list 8 9) "foo" 4))
         (list "foo"))))
 
-(run-test "map-1" (->
+(run-test "filter a string for character" (->
+    (equal? "aa" 
+        (filter 
+            (-> c (= c "a"))
+            "foo bar baz"))))
+
+(run-test "map: square numbers in list" (->
     (equal?
         (map
             (-> x (* x x))
             (list 1 2 3 4))
         (list 1 4 9 16))))
 
-(run-test "map-2" (->
+(run-test "map on empty list" (->
     (equal?
         (map
             (-> x (* x x))
             (list))
         (list))))
 
-(run-test "map-3" (->
+(run-test "map numbers to list of numbers" (->
     (equal?
         (map
             (-> x (list x))
             (list 1 2))
         (list (list 1) (list 2)))))
 
-(run-test "reduce-1" (->
+(run-test "map: replace spaces by hyphens" (->
+    (equal? "foo-bar-baz"
+        (map
+            (-> c (if (= c " ") "-" c))
+            "foo bar baz"))))
+
+(run-test "reduce: sum of number list" (->
     (= 10 (reduce
             (-> acc x (+ acc x))
             (list 1 2 3 4)
             0))))
 
-(run-test "reduce-1" (->
+(run-test "reduce on empty list" (->
     (= 42 (reduce
             (-> acc x (+ acc x))
             (list)
             42))))
+
+(run-test "reduce count spaces in string" (->
+    (= 2 (reduce
+            (-> acc c (if (= c " ") (+ acc 1) acc))
+            "foo bar baz"
+            0))))
