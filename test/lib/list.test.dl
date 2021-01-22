@@ -64,3 +64,23 @@
 
 (run-test "(find \"foo\" \"o\") returns 1" (->
   (= 1 (find "foo" "o"))))
+
+(run-test "(range 0 5 (-> x x)) returns (0 1 2 3 4)" (->
+    (equal?
+        (list 0 1 2 3 4)
+        (range 0 5 (-> x x)))))
+
+(run-test "(range 0 5 (-> x 1)) return (1 1 1 1 1)" (->
+    (equal?
+        (list 1 1 1 1 1)
+        (range 0 5 (-> x 1)))))
+
+(run-test "(range 0 5 (-> x (* x x))) return (0 1 4 9 16)" (->
+    (equal?
+        (list 0 1 4 9 16)
+        (range 0 5 (-> x (* x x))))))
+
+(run-test "(range 0 0 (-> x x)) return ()" (->
+    (equal?
+        (list)
+        (range 0 0 (-> x x)))))

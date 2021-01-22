@@ -16,3 +16,12 @@
     (if (empty? lst) -1
         (if (= (head lst) elem) idx
             (_find (tail lst) elem (+ idx 1))))))
+
+(define range (-> start end fn (_range start end fn (list))))
+(define _range (-> start end fn lst
+    (if (= start end) lst
+        (_range
+            (+ start 1)
+            end
+            fn
+            (append lst (fn start))))))
