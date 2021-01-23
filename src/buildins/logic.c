@@ -5,7 +5,7 @@ int to_boolean(Node *node) {
         return atoi(node->val) != 0;
     }
     else if (node->type == T_STR) {
-        return strlen(node->val) > 0;
+        return 1;
     }
     else if (node->type == T_NONE) {
         return 0;

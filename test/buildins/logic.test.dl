@@ -16,7 +16,7 @@
     (= 0 (not "hello"))))
 
 (run-test "(not \"\") returns 1" (->
-    (= 1 (not ""))))
+    (= 0 (not ""))))
 
 (run-test "(not (list 1 2)) returns 0" (->
     (= 0 (not (list 1 2)))))
@@ -81,7 +81,7 @@
     (= "hello" (or "hello" 4))))
 
 (run-test "(or \"\" \"hello\" 4) returns \"hello\"" (->
-    (= "hello" (or "" "hello" 4))))
+    (= "" (or "" "hello" 4))))
 
 (run-test "(or (list) 2) returns 2" (->
     (= 1 (list? (or (list) 2)))))
