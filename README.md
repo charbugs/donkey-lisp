@@ -1,10 +1,10 @@
-### A lisp-like toy programming language written in C.
+### A lisp-like toy programming language written in C
 
-I wrote this interpreter to teach myself language design concepts. It is not meant to solve any real-world programming task. This is mainly because there are no input/output concepts except of a `print` function. Also there is not garbage collection or optimization for recursion so you will quickly reach the stack size limit of the OS.
+I wrote this interpreter to teach myself language design concepts. It is not meant to solve any real-world programming task. This is mainly because there are no input/output concepts except of a `print` function. Also there is no garbage collector and no optimization for recursion so you will quickly reach the stack size limit of the OS.
 
 Having said that, the language has all the features you need to write simple and complex algorithms and assemble them into larger building blocks: arithmetic, boolean logic, comparision, branching, functions, iteration through recursion.
 
-I created and tested the interpreter only on __Debian 10__ with __GCC 8.3.0__.
+I created and tested the interpreter only on _Debian 10_ with _GCC 8.3.0_
 
 ## Usage
 
@@ -31,7 +31,7 @@ Hello, world!
 
 Include library functions
 
-(The `range` function in this example is defined in `lib/list.dl`)
+(The `range` function in this example is a library function defined in `lib/list.dl`)
 
 ```
 $ echo '(print (range 0 10 (-> x x)) "\n")' > libtest.dl
