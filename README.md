@@ -1,6 +1,8 @@
-An incomplete lisp-like toy programming language written in C.
+### A lisp-like toy programming language written in C.
 
-Note: I wrote this interpreter to teach myself language design concepts. It is not meant to solve any real-world programming task.
+I wrote this interpreter to teach myself language design concepts. It is not meant to solve any real-world programming task. This is mainly because there are no input/output concepts except of a `print` function. Also there is not garbage collection or optimization for recursion so you will quickly reach the stack size limit of the OS.
+
+Having said that, the language has all the features you need to write simple and complex algorithms and assemble them into larger building blocks: arithmetic, boolean logic, comparision, branching, functions, iteration through recursion.
 
 I created and tested the interpreter only on __Debian 10__ with __GCC 8.3.0__.
 
@@ -12,7 +14,7 @@ Build
 $ ./build
 ```
 
-Tests
+Run test suites
 
 ```
 $ ./runtests
@@ -29,7 +31,7 @@ Hello, world!
 
 Include library functions
 
-(The `range` function is defined in `lib/list.dl`)
+(The `range` function in this example is defined in `lib/list.dl`)
 
 ```
 $ echo '(print (range 0 10 (-> x x)) "\n")' > libtest.dl
@@ -83,7 +85,7 @@ Average of list of numbers
 
 __Integers__
 
-There are no floating point numbers.
+The integer is the only number type in the language. There are no floating point numbers.
 
 ```clojure
 (print -42)
@@ -99,7 +101,7 @@ Allowed escape sequences are `\n`, `\t`, `\"` and `\\`
 
 __None__
 
-There is no literal for the none type. It can be produced by the `none` function.
+The none type can be created by the `none` function. There is no literal to create it.
 
 ```clojure
 (print (none))
@@ -107,7 +109,7 @@ There is no literal for the none type. It can be produced by the `none` function
 
 __Lists__
 
-There is no literal for the list type. A list must be createt by the `list` function.
+A list can by created by the `list` function. There is no literal to create a list.
 
 ```clojure
 (print (list 1 2 3))
@@ -115,7 +117,7 @@ There is no literal for the list type. A list must be createt by the `list` func
 ; empty list
 (print (list)) 
 
-; a list can have mixed element types
+; A list can have mixed element types.
 (print (list 1 "foo" 3)) 
 
 ; list of lists
@@ -131,10 +133,10 @@ The `define` function binds a value to a name and sets it to the global scope.
 (print text)
 ```
 
-Expressions at the last position are resolved to a value before they get bound to a name.
+Expressions at the last position will be evaluated before they get bound to the name.
 
 ```clojure
-(define nums (range 0 5))
+(define nums (range 0 5 (-> x x)))
 (print nums) ; (0, 1, 2, 3, 4)
 ```
 
@@ -143,15 +145,15 @@ Expressions at the last position are resolved to a value before they get bound t
 A function can be created by the `->` function, followed by a list of parameter names (optional), followed by the `locals` function (optional) and finally a body expression (required).
 
 ```clojure
-; function without parameters and without local variables
+; Function without parameters and without local variables.
 (define answer (-> 42))
 (print (answer)) ; 42
 
-; function with one parameter but without local variables
+; Function with one parameter but without local variables.
 (define double (-> num (* num 2)))
 (print (double 3)) ; 6
 
-; funcions with parameters and local variables
+; Funcion with one parameter and two local variables
 (define first-plus-last (-> nums
     (locals
         start (head nums)
@@ -161,14 +163,15 @@ A function can be created by the `->` function, followed by a list of parameter 
 (print (first-plus-last (list 3 1 2 6))) ; 9
 ```
 
-Function are data types too and can be passed to other functions. Passing functions can be done by name or inline.
+Functions are data types too and can be passed to other functions. Passing functions can be done by name or inline.
 
 ```clojure
 (define double (-> num (* num 2)))
 
+; Pass function by name.
 (print (map double (list 2 3 4))) ; (4, 6, 8)
 
-; inline
+; Pass function inline.
 (print (map 
     (-> num (* num 2))
     (list 2 3 4))) ; (4, 6, 8)
@@ -176,7 +179,7 @@ Function are data types too and can be passed to other functions. Passing functi
 
 ### Dynamic Scoping
 
-Dynamic scoping means that a global identifier may not only be shadowed by the locals of the current executing functions but also by the caller function.
+The language has dynamic scoping. That means that a global identifier may not only be shadowed by the local variables of the current executing functions but also by the function that has called the current function.
 
 ```clojure
 (define x 3)
@@ -198,23 +201,23 @@ __Boolean logic__
 
 There is no special data type for boolean values. In a boolean context (such as the `if` function) the values `0` and `none` are treated as false, all other values are treated as true.
 
-The `not` function returns `0` for falsy values and `1` for truthy values.
+The `not` function returns `1` for falsy values and `0` for truthy values.
 
 ```clojure
 
-; 0 and none are the only falsy values
+; 0 and none are the only falsy values and `not` will return 1 for them.
 
 (not 0) ; 1
 (not (none)) ; 1
 
-; everything else will produce 0
+; Everything else will produce 0.
 
 (not (list 1 2 3)) ; 0
 (not (list)) ; 0
 (not (-> x x)) ; 0
 ```
 
-The `and` function takes at least 1 argument. It returns the first falsy value of the argument list or the last argument.
+The `and` function takes at least 1 argument and returns the first falsy value of the argument list or the last argument.
 
 ```clojure
 (and 1 2 3) ; 3
@@ -229,7 +232,7 @@ The `or` function takes at least 1 argument. It returns the first truthy value o
 ```clojure
 (or 1 2 3) ; 1
 (or 0 3 0) ; 3
-(ar 0 0 0) ; 0
+(or 0 0 0) ; 0
 (or (list 1 2) "foo" "bar") ; (1, 2)
 (or (none) "foo" "bar") ; "foo"
 ```
@@ -240,7 +243,7 @@ The build-in comparison functions work on intergers, strings, functions and none
 
 ```clojure
 
-; integer comparision works as you would expect
+; Integer comparision works as you would expect.
 
 (= 3 2) ; 0
 (< 3 2) ; 0
@@ -248,8 +251,8 @@ The build-in comparison functions work on intergers, strings, functions and none
 (<= 3 2) ; 0
 (>= 3 2) ; 1 
 
-; string comparision uses the `strcmp` function of the c library.
-; it performs a character by character ascii value comparision of the strings.
+; String comparision uses the `strcmp` function of the C library.
+; It performs a character by character ascii value comparision of the strings.
 
 (= "foo" "bar") ; 0
 (< "foo" "bar") ; 0
@@ -257,41 +260,49 @@ The build-in comparison functions work on intergers, strings, functions and none
 (<= "foo" "bar") ; 0
 (>= "foo" "bar") ; 1
 
-; comparision of functions work by compare the function pointers
+; Comparision of functions work by compare the references (pointers) of the functions.
 
 (define f1 (-> 23))
 (define f2 (-> 23))
 
 (= f1 f1) ; 1
 (= f1 f2) ; 0
-(<= f1 f1); 1 
-(< f1 f2); this does not make sense so return 0
+(<= f1 f1); 1
+(< f1 f2); This does not make sense so return 0.
 
-; you can pass mixed types to the comparision functions but you always get 0
+; You can pass mixed types to the comparision functions which will result in 0.
 
 (< 1 "foo"); 0
 ```
 
 __Math functions__
 
-As said above there are no floating point numbers so the math function may return truncated numbers.
+As said above there are no floating point numbers so the divide function may return truncated numbers.
 
 ```clojure
 (+ 5 2)
+
 (- 5 2)
+
 (* 5 2)
+
 (/ 5 2)
+
 (% 5 2) ; modulo
 ```
 
 __Type checking__
 
 ```clojure
-(int? 5)
-(str? "foo")
-(none? (none))
-(list? (list))
-(function? (-> x x))
+(int? 5) ; 1
+
+(str? "foo") ; 1
+
+(none? (none)) ; 1
+
+(list? (list)) ; 1
+
+(function? (-> x x)) ; 1
 ```
 
 __List functions__
@@ -347,7 +358,7 @@ The `append` function inserts an element to the end of a list
 (append (list) 1) ; (1)
 ```
 
-For strings the `cons` and `append` function behave the same. Also, the element to append or prepend does not need to be a single character.
+For strings the `cons` and `append` function behave the same. Also the element to append or prepend does not need to be a single character.
 
 ```clojure
 (cons "f" "oobar") ; foobar
@@ -358,7 +369,7 @@ For strings the `cons` and `append` function behave the same. Also, the element 
 
 __Branching__
 
-There is only one construct for branching: the `if` function. It takes 3 arguments. If the first argument evaluates to true then the second argument will be resolved and returned otherwise the thrid argument will be resolved and returned.
+There is only one construct for branching: the `if` function. It takes 3 arguments. If the first argument evaluates to true then the second argument will be resolved and returned. Otherwise the third argument will be resolved and returned.
 
 ```clojure
 (if 1 2 3) ; 2
@@ -374,7 +385,7 @@ There is only one construct for branching: the `if` function. It takes 3 argumen
 
 __Iteration__
 
-There is not special construct for iteration (looping). Iteration must be accomblished using recursion.
+There is not special construct for iteration (looping). Iteration must be accomplished by recursion.
 
 For example, here is a function that counts strings in a list.
 
@@ -391,6 +402,8 @@ For example, here is a function that counts strings in a list.
 
 ~~Input~~/Output
 
+As said above, there is no input/ouptut in this language except of the `print` function.
+
 The `print` function takes an arbitrary length of arguments of any type and prints its string representations on the screen. The function returns the first argument or `none` if no arguments where passed.
 
 ```clojure
@@ -404,7 +417,7 @@ The `print` function takes an arbitrary length of arguments of any type and prin
 (print) ; prints nothing and returns `none`
 ```
 
-Because `print` returns its first argument you can wrap it around any expression to inspect the resulting value.
+Because `print` returns its first argument you can wrap it around any expression to inspect the resulting value:
 
 ```clojure
 (map
@@ -414,7 +427,7 @@ Because `print` returns its first argument you can wrap it around any expression
 
 ### Library functions
 
-The `equal?` function takes two arguments of any and perform a comparision. If the arguments are not lists then the functions behaves like the `=` build-in function. If the arguments are list then the function checks for deep equality of the lists.
+The `equal?` function takes two arguments of any type and performs a comparision. If the arguments are not lists then the functions behaves like the `=` build-in function. If the arguments are list then the function checks for deep equality of the lists.
 
 ```clojure
 (define items1 (list (list 1 2 3) (list (list 3 4 5))))
@@ -448,7 +461,7 @@ The `find` function takes a list or a string and an arbitrary value and returns 
 (find "foobar" "o") ; 1
 ```
 
-The `range` function creates a list of values that can be transformed by the passed function.
+The `range` function creates a list of nubmers that can be transformed by the passed function.
 
 ```clojure
 (range 0 5 (-> x x)) ; (0, 1, 2, 3, 4)
@@ -456,12 +469,12 @@ The `range` function creates a list of values that can be transformed by the pas
 (range 0 5 (-> x (* x x))) ; (0, 1, 4, 9, 16) 
 ```
 
-The `map`, `filter` and `reduce` (foldl) functions work as known from many other programming languages. They can treat list and strings.
+The `map`, `filter` and `reduce` (foldl) functions work as known from many other programming languages. They can treat lists and strings.
 
 ```clojure
 (map (-> x (* x x)) (list 1 2 3)) ; (1, 4, 9)
 
-(filter (-> x (< x 10)) (list 2 12 3 13 4 14)) ; (2, 3, 4)
+(filter (-> c (not (= c "m"))) "lorem ipsum") ; "lore ispu"
 
 (reduce (-> acc x (+ acc x) (list 1 2 3 4))) ; 10 
 ```
